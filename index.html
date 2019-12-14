@@ -32,14 +32,20 @@
 	if(isactive == 1)
 	{
 	$(this).css('background-color', '#eee');
-	$(this).css('color', 'black');
+	$(this).children().css('color', 'black');
 	$(this).attr('active',0) 
+	$(this).css('box-shadow', 'rgba(138, 140, 141, 0.933) 5px 4px 5px 3px');
+	$(this).css('border', '2px solid #eee');
 	}
 	else
 	{
 	$(this).css('background-color', '#003399');
-	$(this).css('color', 'white');
+	$(this).children().css('color', 'white');
+	$(this).css('box-shadow', '5px 4px 5px 3px #31649bee');
 	$(this).attr('active',1) 
+	$(this).css('border', '2px solid #008');
+	;
+	
 	}
 	
 	
@@ -48,6 +54,28 @@
 	
   </script>
   <style>
+  
+  .loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
    .Heirarchy{
 position: relative;
     display: inline-block;
@@ -56,6 +84,7 @@ position: relative;
     border-radius: 45px 45px 45px 45px;
     margin-right: 12px !important;
 	text-align:center;
+	cursor:pointer;
   
   }
   
@@ -73,9 +102,9 @@ position: relative;
 }
 
 .label {
-  font: 11px "Helvetica Neue", Helvetica, Arial, sans-serif;
-  text-anchor: middle;
-  text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff, 0 -1px 0 #fff;
+ font-size:13px;
+ text-anchor: middle;
+  
 }
 
 .Dropdown_placeholder_filter{
@@ -86,7 +115,7 @@ div.tooltip {
     position: absolute;			
     text-align: center;			
    				
-    padding: 2px;				
+    padding: 10px;				
     font: 12px sans-serif;		
     background: lightsteelblue;	
     border: 0px;		
@@ -108,10 +137,10 @@ $(document).ready(function() {
 
 
    
-<div    style='left: 39px;position: relative;top: 12px;'>
+<div    style='left: 39px;position: relative;top: 12px;position:relative;height:100%'>
 <div style='position:relative;width:15%;display:inline-block;vertical-align: top;'>
 	<h1>FILTERS</h1>
-	<button style="position:relative;display:inline-block;left:28%" type="button" class="btn btn-primary" onclick="reset()"> Reset</button>
+	<button style="position:relative;display:inline-block;left:28%" type="button" class="btn btn-primary" onclick="reset()"> Clear All</button>
 		<div class='Dropdown_placeholder_filter'> Grade <select  multiple="multiple" class="ui fluid search dropdown"  multiple="" id='Grade_Filter' multiple onchange="FilterChange('Grade')" ></select> </div>
 	   <div class='Dropdown_placeholder_filter'> Subject <select   multiple="multiple" class="ui fluid search dropdown"  multiple=""  id='Subject_Filter' multiple onchange="FilterChange('Subject')"></select> </div>
 	   <div class='Dropdown_placeholder_filter'> Unit <select style='position:relative;width:20%;display:inline-block' multiple="multiple" class="ui fluid search dropdown"  multiple=""  id='Unit_Filter' multiple onchange="FilterChange('Unit')"></select> </div>
@@ -121,30 +150,37 @@ $(document).ready(function() {
 
 	
 </div>
-<div style='position:relative;width:75%;display:inline-block'>
+
+
+	
+<div style='position:relative;width:75%;height:130%;display:inline-block;left:10%'>
 <div id="sortable" style='position:relative;display:inline-block'>
-  <div class='hasmenu Heirarchy' cf="PerComplete" active=1 style='background-color:#003399' id='Grade' oncontextmenu= "funccm()"  > <span  style="top: 24px;color: white;font-weight: bolder;position:relative;text-align:center">  Grade </span></div> 
-  <div class='hasmenu Heirarchy' cf="PerComplete" active=1 style='background-color:#003399' id='Subject'  > <span  style="top: 24px;color: white;font-weight: bolder;position:relative;text-align:center">  Subject </span></div> 
-  <div class='hasmenu Heirarchy' cf="PerComplete" active=1 style='background-color:#003399' id='Unit'   > <span  style="top: 24px;color: white;font-weight: bolder;position:relative;text-align:center">  Unit </span></div> 
-  <div class='hasmenu Heirarchy' cf="PerComplete"  active=1 style='background-color:#003399' id='Chapter'  > <span  style="top: 24px;color: white;font-weight: bolder;position:relative;text-align:center">  Chapter </span></div> 
-  <div class='hasmenu Heirarchy' cf="PerComplete"  active=1 style='background-color:#003399' id='Topic' > <span  style="top: 24px;color: white;font-weight: bolder;position:relative;text-align:center">  Topic </span> </div>
-   <div class='hasmenu Heirarchy'  cf="PerComplete" active=1 style='background-color:#003399' id='Concept'  > <span  style="top: 24px;color: white;font-weight: bolder;position:relative;text-align:center">  Concept </span></div>
-   <div class='hasmenu Heirarchy' cf="PerComplete" active=1 style='background-color:#003399' id='CooboTitles'  > <span  style="top: 24px;color: white;font-weight: bolder;position:relative;text-align:center"> CooboTitles </span> </div>
-   
+  <div class='hasmenu Heirarchy' cf="PerComplete" active=1 style='border: 2px solid #008;background-color:#003399;box-shadow:5px 4px 5px 3px #31649bee' id='Subject'  > <span  style="top: 29px;color: white;font-weight: bolder;position:relative;text-align:center">  Subject </span></div> 
+  <div class='hasmenu Heirarchy' cf="PerComplete" active=1 style='border: 2px solid #008;background-color:#003399;box-shadow:5px 4px 5px 3px #31649bee' id='Unit'   > <span  style="top: 29px;color: white;font-weight: bolder;position:relative;text-align:center">  Unit </span></div> 
+  <div class='hasmenu Heirarchy' cf="PerComplete"  active=1 style='border: 2px solid #008;background-color:#003399;box-shadow:5px 4px 5px 3px #31649bee' id='Chapter'  > <span  style="top: 29px;color: white;font-weight: bolder;position:relative;text-align:center">  Chapter </span></div> 
+  <div class='hasmenu Heirarchy' cf="PerComplete"  active=0 style='border: 2px solid #eee;background-color:#eee;box-shadow:rgba(138, 140, 141, 0.933) 5px 4px 5px 3px' id='Topic' > <span  style="top: 29px;color: black;font-weight: bolder;position:relative;text-align:center">  Topic </span> </div>
+   <div class='hasmenu Heirarchy'  cf="PerComplete" active=0 style='border: 2px solid #eee;background-color:#eee;box-shadow:rgba(138, 140, 141, 0.933) 5px 4px 5px 3px' id='Concept'  > <span  style="top: 29px;color: black;font-weight: bolder;position:relative;text-align:center">  Concept </span></div>
+   <div class='hasmenu Heirarchy' cf="PerComplete" active=0 style='border: 2px solid #eee;background-color:#eee;box-shadow:rgba(138, 140, 141, 0.933) 5px 4px 5px 3px' id='CooboTitles'  > <span  style="top: 29px;color: black;font-weight: bolder;position:relative;text-align:center"> CooboTitles </span> </div>
+   <div class='hasmenu Heirarchy' cf="PerComplete" active=0 style='  border: 2px solid #eee; background-color:#eee;box-shadow:rgba(138, 140, 141, 0.933) 5px 4px 5px 3px' id='Grade' oncontextmenu= "funccm()"  > <span  style="top: 29px;color: black;font-weight: bolder;position:relative;text-align:center">  Grade </span></div> 
+  
   
 </div>
-
- <span style="position:relative;top:25px"> Size: <select id='Metric'><option value='Scriptwriting'>Scriptwriting</option><option value='MediaFile'>MediaFile</option><option value='Production'>Production</option><option value='LengthofCoboo'>LengthofCoboo</option></select> </span>
-
-<button style="position:relative;display:inline-block;top:25px" type="button" class="btn btn-primary" onclick="GraphParameterChange()"> Generate Chart</button>
+<br>
+<div style="position:relative;left:20%">
+ 	
 	
 	
+    
+<div style='display:inline-block;position:relative;top:31px; left:-10px'> <b style='top: -6px; left: -4px;  position: relative;'>Zoom :</b><div id='slider' style='display:inline-block' ></div> </div> 
+<span style="position:relative;top:25px;left:15px"> <b>Size:</b> <select id='Metric'  style='padding-top: 6px; padding-bottom: 6px;border-radius: 6px;'><option value='Scriptwriting'>Scriptwriting</option><option value='MediaFile'>MediaFile</option><option value='Production'>Production</option><option value='LengthofCoboo'>LengthofCoboo</option></select> </span>
+
+  
 	
+<button style="position:relative;display:inline-block;top:25px;left:15px" type="button" class="btn btn-primary" onclick="GraphParameterChange()"> Generate Chart</button>
+ 
+</div>
 
-<div> Zoom :<div id='slider'></div> <div id='saveFilters'></div> <div id='loadFilters'></div> </div>
-
-
-<div id= 'PackCircle'> <svg id='PackCircleSVG' width="1200" height="1200"></svg> </div>
+<div id= 'PackCircle' style="top: 32px;position:relative;width:100%;height:90%"> <svg id='PackCircleSVG' style="position:relative;width:100%;height:100%"></svg> </div>
 </div>
 <div style='position:relative;width:15%;display:none;vertical-align: top;'>
 <div> 
@@ -152,10 +188,10 @@ $(document).ready(function() {
 	Level-1:<br> Definition:<select id='Level1' onchange='LevelChange(1)'>  <option value='Grade'>Grade</option> <option value='Subject' selected>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles'>CooboTitles</option> </select> <br>Color: <select id='Color_L1'><option value='Default'>Default- Level</option><option value='PerComplete' selected>PerComplete</option></select>
 	<br><br>Level-2:<br> Definition:<select id='Level2' onchange='LevelChange(2)'>  <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit' selected>Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles'>CooboTitles</option> </select><br> Color: <select id='Color_L2'><option value='Default'>Default- Level</option><option value='PerComplete' selected>PerComplete</option></select>
 	<br><br>Level-3:<br> Definition:<select id='Level3' onchange='LevelChange(3)'> <option value='None'>None</option> <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter' selected>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles'>CooboTitles</option> </select> <br>Color: <select id='Color_L3'><option value='Default' selected>Default- Level</option><option value='PerComplete'>PerComplete</option></select>
-	<br><br>Level-4:<br> Definition:<select id='Level4' onchange='LevelChange(4)'> <option value='None'>None</option> <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic' selected>Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles'>CooboTitles</option> </select><br> Color: <select id='Color_L4'><option value='Default' selected>Default- Level</option><option value='PerComplete'>PerComplete</option></select>
-	<br><br>Level-5:<br> Definition:<select id='Level5' onchange='LevelChange(5)'> <option value='None'>None</option> <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept' selected>Concept</option> <option value='CooboTitles'>CooboTitles</option> </select><br> Color: <select id='Color_L5'><option value='Default' selected>Default- Level</option><option value='PerComplete'>PerComplete</option></select>
-	<br><br>Level-6:<br> Definition:<select id='Level6' onchange='LevelChange(6)'> <option value='None'>None</option> <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles' selected>CooboTitles</option> </select> <br>Color: <select id='Color_L6'><option value='Default'>Default- Level</option><option value='PerComplete'>PerComplete</option></select>
-	<br><br>Level-7:<br> Definition:<select id='Level7' onchange='LevelChange(7)'> <option value='None'>None</option> <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles' selected>CooboTitles</option> </select> <br>Color: <select id='Color_L7'><option value='Default'>Default- Level</option><option value='PerComplete'>PerComplete</option></select>
+	<br><br>Level-4:<br> Definition:<select id='Level4' onchange='LevelChange(4)'> <option value='None' selected>None</option> <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic' >Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles'>CooboTitles</option> </select><br> Color: <select id='Color_L4'><option value='Default' selected>Default- Level</option><option value='PerComplete'>PerComplete</option></select>
+	<br><br>Level-5:<br> Definition:<select id='Level5' onchange='LevelChange(5)'> <option value='None' selected>None</option> <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept' >Concept</option> <option value='CooboTitles'>CooboTitles</option> </select><br> Color: <select id='Color_L5'><option value='Default' selected>Default- Level</option><option value='PerComplete'>PerComplete</option></select>
+	<br><br>Level-6:<br> Definition:<select id='Level6' onchange='LevelChange(6)'> <option value='None' selected>None</option> <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles' >CooboTitles</option> </select> <br>Color: <select id='Color_L6'><option value='Default'>Default- Level</option><option value='PerComplete'>PerComplete</option></select>
+	<br><br>Level-7:<br> Definition:<select id='Level7' onchange='LevelChange(7)'> <option value='None' selected>None</option> <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles' >CooboTitles</option> </select> <br>Color: <select id='Color_L7'><option value='Default'>Default- Level</option><option value='PerComplete'>PerComplete</option></select>
 	<br><br>
 	<br><br>
 	
@@ -197,6 +233,7 @@ function GraphParameterChange()
 
 var e = document.getElementById("Metric");
 var MericSel = e.options[e.selectedIndex].value;
+var nocircles = 0
 
 	iter=1
 	$("#Level1").val("None")
@@ -218,9 +255,7 @@ var MericSel = e.options[e.selectedIndex].value;
  var we = document.getElementById('sortable').children
  for(i =0; i< we.length; i++)
  {
- 	console.log(we.item(i).attributes.active.value == "1")
-	console.log(we.item(i).attributes.active.value )
-	if(we.item(i).attributes.active.value == "1")
+ 	if(we.item(i).attributes.active.value == "1")
 	{
 	
 	$("#Level"+iter).val(we.item(i).id)
@@ -280,11 +315,11 @@ var data_k = data.map((e)=>{
 			for(var j=0; j<nested[i].values.length;j++)
 			{
 			result.children.push({"name":nested[i].values[j].key, "size": nested[i].values[j].value.size });
-				
+			nocircles = nocircles+1	
 			
 			}
 			root.children.push(result)
-			
+			nocircles = nocircles+1
 		}
 	
 }		
@@ -312,13 +347,16 @@ var data_k = data.map((e)=>{
 			for(var j=0; j<nested[i].values.length;j++)
 			{
 			result.children.push({"name":nested[i].values[j].key, "children": [ ] });
+			nocircles = nocircles+1
 				for(var k=0; k<nested[i].values[j].values.length;k++)
 				{
 				result.children[j].children.push({"name":nested[i].values[j].values[k].key, "size":nested[i].values[j].values[k].value.size });
+				nocircles = nocircles+1
 				}
 				
 			}
 			root.children.push(result)
+			nocircles = nocircles+1
 			
 		}
 	
@@ -349,18 +387,21 @@ var data_k = data.map((e)=>{
 			for(var j=0; j<nested[i].values.length;j++)
 			{
 			result.children.push({"name":nested[i].values[j].key, "children": [ ] });
+			nocircles = nocircles+1
 				for(var k=0; k<nested[i].values[j].values.length;k++)
 				{
 				result.children[j].children.push({"name":nested[i].values[j].values[k].key,  "children": [ ] });
+				nocircles = nocircles+1
 				for(var l=0; l<nested[i].values[j].values[k].values.length;l++)
 				{
 					result.children[j].children[k].children.push({"name":nested[i].values[j].values[k].values[l].key, "size":nested[i].values[j].values[k].values[l].value.size });
-			
+					nocircles = nocircles+1
 				}
 				}
 				
 			}
 			root.children.push(result)
+			nocircles = nocircles+1
 			
 		}
 	
@@ -393,21 +434,26 @@ else if(Level6_sel == 'None')
 			for(var j=0; j<nested[i].values.length;j++)
 			{
 			result.children.push({"name":nested[i].values[j].key, "children": [ ] });
+			nocircles = nocircles+1
 				for(var k=0; k<nested[i].values[j].values.length;k++)
 				{
 				result.children[j].children.push({"name":nested[i].values[j].values[k].key,  "children": [ ] });
+				nocircles = nocircles+1
 				for(var l=0; l<nested[i].values[j].values[k].values.length;l++)
 				{
 				result.children[j].children[k].children.push({"name":nested[i].values[j].values[k].values[l].key,  "children": [ ] });
+				nocircles = nocircles+1
 				for(var m=0; m<nested[i].values[j].values[k].values[l].values.length;m++)
 				{
 					result.children[j].children[k].children[l].children.push({"name":nested[i].values[j].values[k].values[l].values[m].key, "size":nested[i].values[j].values[k].values[l].values[m].value.size });
+					nocircles = nocircles+1
 				}
 				}
 				}
 				
 			}
 			root.children.push(result)
+			nocircles = nocircles+1
 			
 		}
 	
@@ -441,18 +487,23 @@ else if(Level7_sel == 'None')
 			for(var j=0; j<nested[i].values.length;j++)
 			{
 			result.children.push({"name":nested[i].values[j].key, "children": [ ] });
+			nocircles = nocircles+1
 				for(var k=0; k<nested[i].values[j].values.length;k++)
 				{
 				result.children[j].children.push({"name":nested[i].values[j].values[k].key,  "children": [ ] });
+				nocircles = nocircles+1
 				for(var l=0; l<nested[i].values[j].values[k].values.length;l++)
 				{
 				result.children[j].children[k].children.push({"name":nested[i].values[j].values[k].values[l].key,  "children": [ ] });
+				nocircles = nocircles+1
 				for(var m=0; m<nested[i].values[j].values[k].values[l].values.length;m++)
 				{
 				result.children[j].children[k].children[l].children.push({"name":nested[i].values[j].values[k].values[l].values[m].key,  "children": [ ] });
+				nocircles = nocircles+1
 				for(var n=0; n<nested[i].values[j].values[k].values[l].values[m].values.length;n++)
 				{
 					result.children[j].children[k].children[l].children[m].children.push({"name":nested[i].values[j].values[k].values[l].values[m].values[n].key, "size":nested[i].values[j].values[k].values[l].values[m].values[n].value.size });
+					nocircles = nocircles+1
 				}
 				}
 				}
@@ -460,7 +511,7 @@ else if(Level7_sel == 'None')
 				
 			}
 			root.children.push(result)
-			
+			nocircles = nocircles+1
 		}
 	
 
@@ -491,21 +542,27 @@ var nested =
 			for(var j=0; j<nested[i].values.length;j++)
 			{
 			result.children.push({"name":nested[i].values[j].key, "children": [ ] });
+			nocircles = nocircles+1
 				for(var k=0; k<nested[i].values[j].values.length;k++)
 				{
 				result.children[j].children.push({"name":nested[i].values[j].values[k].key,  "children": [ ] });
+				nocircles = nocircles+1
 				for(var l=0; l<nested[i].values[j].values[k].values.length;l++)
 				{
 				result.children[j].children[k].children.push({"name":nested[i].values[j].values[k].values[l].key,  "children": [ ] });
+				nocircles = nocircles+1
 				for(var m=0; m<nested[i].values[j].values[k].values[l].values.length;m++)
 				{
 				result.children[j].children[k].children[l].children.push({"name":nested[i].values[j].values[k].values[l].values[m].key,  "children": [ ] });
+				nocircles = nocircles+1
 				for(var n=0; n<nested[i].values[j].values[k].values[l].values[m].values.length;n++)
 				{
 				result.children[j].children[k].children[l].children[m].children.push({"name":nested[i].values[j].values[k].values[l].values[m].values[n].key,  "children": [ ] });
+				nocircles = nocircles+1
 				for(var o=0; o<nested[i].values[j].values[k].values[l].values[m].values[n].values.length;o++)
 				{
 					result.children[j].children[k].children[l].children[m].children[n].children.push({"name":nested[i].values[j].values[k].values[l].values[m].values[n].values[o].key, "size":nested[i].values[j].values[k].values[l].values[m].values[n].values[o].value.size });
+					nocircles = nocircles+1
 				}
 				}
 				}
@@ -529,7 +586,7 @@ var nested =
  
  var colorRange = d3.scaleLinear()
     .domain([0, 100])
-    .range(["hsl(4, 100%, 45%)", "hsl(130, 100%, 11%)"])
+    .range(["hsl(0, 95%, 50%)","hsl(91, 97%, 29%)"])
     .interpolate(d3.interpolateHcl);
 	
 	
@@ -607,7 +664,7 @@ L7colorval = getnodecolor_final(Level7_sel,Color_L7 )
  
  
  
- circlepacking(root)
+ circlepacking(root,nocircles)
  
 }
 
@@ -641,7 +698,7 @@ if(Changed == "Concept"){concept_f = ConceptSel}
 
 
 
-data = data_bk.filter(function(d) { return  (grade_f.length == 0 || grade_f.includes(d.Grade)) && (subject_f.length == 0 || subject_f.includes(d.Subject )) && (unit_f.length == 0 || unit_f.includes(d.Unit)) && (chapter_f.length == 0 || chapter_f.includes(d.Chapter)) && (topic_f.length == 0 ||topic_f.includes(d.Topic)) && (concept_f.length == 0 ||concept_f.includes(d.Concept)) } );
+data = data_bk.filter(function(d) { return  (grade_f == null ||  grade_f.length == 0 || grade_f.includes(d.Grade)) && ( subject_f == null || subject_f.length == 0 || subject_f.includes(d.Subject )) && (unit_f == null || unit_f.length == 0 || unit_f.includes(d.Unit)) && (chapter_f == null ||chapter_f.length == 0 || chapter_f.includes(d.Chapter)) && (topic_f == null ||topic_f.length == 0 ||topic_f.includes(d.Topic)) && (concept_f == null || concept_f.length == 0 ||concept_f.includes(d.Concept)) } );
 
 loadFilters(Changed)
 GraphParameterChange()
@@ -727,13 +784,15 @@ $('#Concept_Filter').empty()
 	
 }
 
-function circlepacking(root){
+function circlepacking(root,nocircles){
 
 d3.select("#PackCircle").select("svg").selectAll("*").remove();
 d3.select("#slider p").remove();
- var width = 900,height = 900;
 
- 
+if(nocircles < 100){nocircles = 100}
+/*var width = nocircles * .15,height = nocircles * .15;*/
+
+var width = 900,height = 900;
 var zoom = d3.zoom()
             .scaleExtent([1, 4])
             .on("zoom", zoomed);
@@ -750,18 +809,18 @@ var slider = d3.select("#slider").append("p").append("input")
             .attr("value", zoom.scaleExtent()[0])
             .attr("min", zoom.scaleExtent()[0])
             .attr("max", zoom.scaleExtent()[1])
-            .attr("step", (zoom.scaleExtent()[1] - zoom.scaleExtent()[0]) / 20)
+            .attr("step", (zoom.scaleExtent()[1] - zoom.scaleExtent()[0]) / 4)
             .on("input", slided);
 
 var svg = d3.select("#PackCircle").select("svg"),
     margin = 20,
-    diameter = +svg.attr("width"),
+    diameter = +width,
     g = svg.append("g").attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
 svg
     .call(zoom); 
 
 	
-	var div = d3.select("body").append("div")	
+var div = d3.select("body").append("div")	
     .attr("class", "tooltip")				
     .style("opacity", 0);
 	
@@ -803,7 +862,7 @@ var pack = d3.pack()
 	
 function getcolorofnode(ddepth,ddataname)
 {
- if(ddepth ==0){circlecolor = color(ddepth)}
+ if(ddepth ==0){circlecolor = "white"}
 	  if(ddepth ==1 && Color_L1 == 'Default'){circlecolor = color(ddepth)}
 	  else if(ddepth ==2 && Color_L2 == 'Default'){circlecolor = color(ddepth)}
 	  else if(ddepth ==3 && Color_L3 == 'Default'){circlecolor = color(ddepth)}
@@ -868,14 +927,14 @@ function getRandom(arr, n) {
 }
 
 len2 = nodes.filter(function(d) { return d.parent === root; }).length
-console.log(len2)
+
 labelcount = 0
 for(i=0;i<nodes.length;i++)
 {
 if(nodes[i]['parent'] === root)
 {
 labelcount = labelcount + 1
-if(labelcount % 5 != 0 & len2 > 500)
+if(labelcount % 20 != 0 & len2 > 500)
 {
 nodes[i]['Showlabel'] = 'F'
 }
@@ -891,20 +950,18 @@ nodes[i]['Showlabel'] = 'F'
 
 }
 
-console.log(nodes)
-
   var text = g.selectAll("text")
     .data(nodes)
     .enter().append("text")
-      .attr("class", "label")
-      .style("fill-opacity", function(d) { return d.parent === root ? 1 : 0; })
-      .style("display", function(d) { return d.Showlabel === 'T' ? "inline" : "none"; })
-      .text(function(d) { return d.data.name; });
+	 .attr("class", "label")
+     .style("fill-opacity", function(d) { return d.parent === root ? 1 : 0; })
+     .style("display", function(d) { return d.Showlabel === 'T' ? "inline" : "none"; })
+     .text(function(d) { return d.data.name; });
 
   var node = g.selectAll("circle,text");
 
   svg
-      .style("background", color(-1))
+      .style("background", "white")
       .on("click", function() { zoomfun(root); });
 
   zoomTo([root.x, root.y, root.r * 2 + margin]);
@@ -932,13 +989,12 @@ console.log(nodes)
   }
   
    function zoomed() {
-   g.style("stroke-width", 1.5 / d3.event.transform.k + "px");
-  g.attr("transform", d3.event.transform); // updated for d3 v4
-  if( Math.round(d3.event.transform.k) == 1)
-  {
-  g.attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
-  }
-           slider.property("value", d3.event.transform.k);
+	  g.style("stroke-width", 1.5 / d3.event.transform.k + "px");
+	  g.attr("transform", d3.event.transform); // updated for d3 v4
+	  if( Math.round(d3.event.transform.k) == 1)
+	  {g.attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");}
+	  
+	  slider.property("value", d3.event.transform.k);
         }
 
         function dragstarted(d) {
@@ -1023,7 +1079,7 @@ $('.ui.checkbox')
 <style>
 .hasmenu,
 .hasmenu2 {
-  border: 1px solid #008;
+
   margin: 3px;
   padding: 5px;
   width: 30px;
@@ -1032,6 +1088,7 @@ $('.ui.checkbox')
 /* Optionally define a fixed width for menus */
 .ui-menu {
   width: 220px;
+ 
 }
 
 /* Allow to use <kbd> elements inside the title to define shortcut hints. */
@@ -1096,8 +1153,7 @@ $(document).contextmenu({
       $target = ui.target,
       extraData = ui.extraData; // passed when menu was opened by call to open()
 
-    // console.log("beforeOpen", event, ui, event.originalEvent.type);
-
+   
     ui.menu.zIndex($(event.target).zIndex() + 1);
 
    
