@@ -84,7 +84,6 @@ position: relative;
     border-radius: 45px 45px 45px 45px;
     margin-right: 12px !important;
 	text-align:center;
-	cursor:pointer;
   
   }
   
@@ -102,7 +101,7 @@ position: relative;
 }
 
 .label {
- font-size:13px;
+ font-size:11px;
  text-anchor: middle;
   
 }
@@ -115,7 +114,7 @@ div.tooltip {
     position: absolute;			
     text-align: center;			
    				
-    padding: 10px;				
+    padding: 2px;				
     font: 12px sans-serif;		
     background: lightsteelblue;	
     border: 0px;		
@@ -135,8 +134,6 @@ $(document).ready(function() {
 
 </script> 
 
-
-   
 <div    style='left: 39px;position: relative;top: 12px;position:relative;height:100%'>
 <div style='position:relative;width:15%;display:inline-block;vertical-align: top;'>
 	<h1 style="position:relative;left:40px">FILTERS</h1>
@@ -172,7 +169,7 @@ $(document).ready(function() {
 	
 	
     
-<div style='display:inline-block;position:relative;top:31px; left:-10px'> <b style='top: -6px; left: -4px;  position: relative;'>Zoom :</b><div id='slider' style='display:inline-block' ></div> </div> 
+<div style='display:inline-block;position:relative;top:31px; left:-10px'>  </div> 
 <span style="position:relative;top:25px;left:15px"> <b>Size:</b> <select id='Metric'  style='padding-top: 6px; padding-bottom: 6px;border-radius: 6px;'><option value='Scriptwriting'>Scriptwriting</option><option value='MediaFile'>MediaFile</option><option value='Production'>Production</option><option value='LengthofCoboo'>LengthofCoboo</option></select> </span>
 
   
@@ -587,7 +584,7 @@ var nested =
  
  var colorRange = d3.scaleLinear()
     .domain([0, 100])
-    .range(["hsl(0, 95%, 50%)","hsl(91, 97%, 29%)"])
+    .range(["hsl(4, 100%, 45%)", "hsl(130, 100%, 11%)"])
     .interpolate(d3.interpolateHcl);
 	
 	
@@ -649,6 +646,7 @@ L7colorval = getnodecolor_final(Level7_sel,Color_L7 )
  
  function colorRange2(colval)
  {
+ var color = ""
    if(colval==0){color = "hsl(0, 100%, 50%)"}
 	  if(colval==1){color =  "hsl(31, 100%, 45%)"}
 	  if(colval==2){color = "hsl(62, 100%, 45%)"}
@@ -785,10 +783,12 @@ $('#Concept_Filter').empty()
 	
 }
 
+
+
 function circlepacking(root,nocircles){
 
 d3.select("#PackCircle").select("svg").selectAll("*").remove();
-d3.select("#slider p").remove();
+
 
 if(nocircles < 100){nocircles = 100}
 /*var width = nocircles * .15,height = nocircles * .15;*/
@@ -804,14 +804,7 @@ var drag = d3.drag()
             .on("drag", dragged)
             .on("end", dragended);
 
-var slider = d3.select("#slider").append("p").append("input")
-            .datum({})
-            .attr("type", "range")
-            .attr("value", zoom.scaleExtent()[0])
-            .attr("min", zoom.scaleExtent()[0])
-            .attr("max", zoom.scaleExtent()[1])
-            .attr("step", (zoom.scaleExtent()[1] - zoom.scaleExtent()[0]) / 4)
-            .on("input", slided);
+
 
 var svg = d3.select("#PackCircle").select("svg"),
     margin = 20,
@@ -831,8 +824,8 @@ var color = d3.scaleLinear()
     .interpolate(d3.interpolateHcl);
 
 var pack = d3.pack()
-    .size([diameter - margin, diameter - margin])
-    .padding(2);
+    .size([diameter, diameter])
+    .padding(15);
 
 
 
@@ -861,6 +854,21 @@ var pack = d3.pack()
 	
 	
 	
+	
+function describeArc( radius ){
+
+   
+    var d = [
+        "M", -radius, 0, 
+        "A", 1,1,0,0,1,+radius, 0
+    ].join(" ");
+
+    return d;       
+}
+
+
+
+	
 function getcolorofnode(ddepth,ddataname)
 {
  if(ddepth ==0){circlecolor = "white"}
@@ -885,9 +893,9 @@ function getcolorofnode(ddepth,ddataname)
     .enter().append("circle")
       .attr("class", function(d) { return d.parent ? d.children ? "node" : "node node--leaf" : "node node--root"; })
       .style("fill", function(d) {   return getcolorofnode(d.depth, d.data.name) })
-	   .style("stroke", "#666")
+	    .style("stroke", "#666")
 	    .style("stroke-width", "1")
-      .on("click", function(d) {  ; if (focus !== d) zoomfun(d), d3.event.stopPropagation(); })
+	  .on("click", function(d) {  ; if (focus !== d) zoomfun(d), d3.event.stopPropagation(); })
 	   .on("mouseover", function(d) {
 		if(d.depth ==0){level_sel = "Level: "+ d.data.name}
 	   if(d.depth ==1){level_sel =  "Level: "+ $("#Level1").val()+ "<br>"+ d.data.name}
@@ -911,9 +919,34 @@ function getcolorofnode(ddepth,ddataname)
                 .style("opacity", 0);	
         })
 	.on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
+	
+	
+
 	  ;
 
-	  
+	var arcs = g.selectAll("path").data(nodes)
+    .enter().append("path")
+    .attr("fill","none")
+    .attr("id", function(d,i){return "s"+i;})
+    .attr("d", function(d,i) {
+        return describeArc(  d.r )
+    } );
+	
+	
+	
+	
+var text = g.selectAll("text").data(nodes)
+    .enter().append("text")
+	.attr("font-size",function(d){return(d3.min([3 * d.r / d.data.name.length, 16]))})
+    .style("text-anchor","middle")
+    .append("textPath")
+    .attr("xlink:href",function(d,i){return "#s"+i;})
+    .attr("startOffset",function(d,i){return "50%";})
+
+    .text(function(d){return d.data.name;})
+
+	
+	
 function getRandom(arr, n) {
     var result = new Array(n),
         len = arr.length,
@@ -936,7 +969,7 @@ for(i=0;i<nodes.length;i++)
 if(nodes[i]['parent'] === root)
 {
 labelcount = labelcount + 1
-if(labelcount % 20 != 0 & len2 > 500)
+if(labelcount % 5 != 0 & len2 > 500)
 {
 nodes[i]['Showlabel'] = 'F'
 }
@@ -952,14 +985,7 @@ nodes[i]['Showlabel'] = 'F'
 
 }
 
-  var text = g.selectAll("text")
-    .data(nodes)
-    .enter().append("text")
-	 .attr("class", "label")
-     .style("fill-opacity", function(d) { return d.parent === root ? 1 : 0; })
-     .style("display", function(d) { return d.Showlabel === 'T' ? "inline" : "none"; })
-     .text(function(d) { return d.data.name; });
-
+ 
   var node = g.selectAll("circle,text");
 
   svg
@@ -967,6 +993,11 @@ nodes[i]['Showlabel'] = 'F'
       .on("click", function() { zoomfun(root); });
 
   zoomTo([root.x, root.y, root.r * 2 + margin]);
+
+  
+ 
+
+
 
   function zoomfun(d) {
     var focus0 = focus; focus = d;
@@ -977,26 +1008,47 @@ nodes[i]['Showlabel'] = 'F'
           return function(t) { zoomTo(i(t)); };
         });
 
-    transition.selectAll("text")
-      .filter(function(d) { return d.parent === focus || this.style.display === "inline"; })
-        .style("fill-opacity", function(d) { return d.parent === focus ? 1 : 0; })
-        .on("start", function(d) { if (d.parent === focus) this.style.display = "inline"; })
-        .on("end", function(d) { if (d.parent !== focus) this.style.display = "none"; });
+
   }
 
   function zoomTo(v) {
     var k = diameter / v[2]; view = v;
     node.attr("transform", function(d) { return "translate(" + (d.x - v[0]) * k + "," + (d.y - v[1]) * k + ")"; });
     circle.attr("r", function(d) { return d.r * k; });
+	svg.selectAll("path").attr('d', function(d){return describeArc(d.r * k)})
+	
+	text.attr("font-size",function(d){return(d3.min([3 * d.r*k / d.data.name.length, 16]))})
+
+	
   }
   
+  
+  function zoom(d) {
+  var focus0 = focus; focus = d;
+
+  var transition = d3.transition()
+      .duration(d3.event.altKey ? 7500 : 750)
+      .tween("zoom", function(d) {
+        var i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2 + margin]);
+        return function(t) { zoomTo(i(t)); };
+      });
+
+
+}
+
+
    function zoomed() {
-	  g.style("stroke-width", 1.5 / d3.event.transform.k + "px");
-	  g.attr("transform", d3.event.transform); // updated for d3 v4
+    var k = d3.event.transform.k
+   g.style("stroke-width", 1.5 / d3.event.transform.k + "px");
+  g.attr("transform", d3.event.transform); // updated for d3 v4
 	  if( Math.round(d3.event.transform.k) == 1)
-	  {g.attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");}
-	  
-	  slider.property("value", d3.event.transform.k);
+	  {
+	  g.attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
+	  }
+     text.attr("font-size",function(d){return(d3.min([3 * d.r*k / d.data.name.length, 16]))})
+   
+		   
+		   
         }
 
         function dragstarted(d) {
@@ -1020,33 +1072,6 @@ nodes[i]['Showlabel'] = 'F'
     .selectAll("g")
     .data(root)
     .enter().append("g");
-
-  cell.append("path")
-      .attr("stroke", "orange")
-      .attr("d", d => `M${d3.polygonCentroid(d)}L${d.data}`);
-
-  cell.append("path")
-      .attr("stroke", "#ccc")
-      .attr("d", d => `M${d.join("L")}Z`);
-
-
-  svg.append("g")
-      .style("font", "10px sans-serif")
-    .selectAll("text")
-    
-    .enter().append("text")
-      .each(function(d) {
-        const [x, y] = d.data, [cx, cy] = d3.polygonCentroid(d);
-        const angle = Math.round(Math.atan2(cy - y, cx - x) / Math.PI * 2);
-        d3.select(this).call(angle === 0 ? orient.right
-            : angle === -1 ? orient.top
-            : angle === 1 ? orient.bottom
-            : orient.left);
-      })
-      .attr("transform", d => `translate(${d.data})`)
-      .text((d, i) => i);
-
-		
 		
 		}
 function stopped() {
@@ -1090,7 +1115,7 @@ $('.ui.checkbox')
 /* Optionally define a fixed width for menus */
 .ui-menu {
   width: 220px;
- 
+  background-color: black;
 }
 
 /* Allow to use <kbd> elements inside the title to define shortcut hints. */
