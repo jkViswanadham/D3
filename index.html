@@ -229,6 +229,7 @@ GraphParameterChange()
 function GraphParameterChange()
 {
 
+window.zk = 1
 var e = document.getElementById("Metric");
 var MericSel = e.options[e.selectedIndex].value;
 var nocircles = 0
@@ -1013,6 +1014,7 @@ nodes[i]['Showlabel'] = 'F'
 
   function zoomTo(v) {
     var k = diameter / v[2]; view = v;
+	window.zk = k
     node.attr("transform", function(d) { return "translate(" + (d.x - v[0]) * k + "," + (d.y - v[1]) * k + ")"; });
     circle.attr("r", function(d) { return d.r * k; });
 	svg.selectAll("path").attr('d', function(d){return describeArc(d.r * k)})
@@ -1038,14 +1040,14 @@ nodes[i]['Showlabel'] = 'F'
 
 
    function zoomed() {
-    var k = d3.event.transform.k
+    var k2 = d3.event.transform.k
    g.style("stroke-width", 1.5 / d3.event.transform.k + "px");
   g.attr("transform", d3.event.transform); // updated for d3 v4
 	  if( Math.round(d3.event.transform.k) == 1)
 	  {
 	  g.attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
 	  }
-     text.attr("font-size",function(d){return(d3.min([3 * d.r*k / d.data.name.length, 16]))})
+     text.attr("font-size",function(d){return(d3.min([3 * d.r*k2*window.zk / d.data.name.length, 16]))})
    
 		   
 		   
