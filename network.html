@@ -11,13 +11,13 @@
 	<link rel="stylesheet" href="/D3/css/select2.css">
 
 	
-	<script src=" /D3/js/jquery.js"></script>
-    <script src=" /D3/js/popper.js"></script>
+	<script src="/D3/js/jquery.js"></script>
+    <script src="/D3/js/popper.js"></script>
     <script src="/D3/js/bootstrap.min.js" ></script>
-	<script src=" /D3/js/semantic.js" ></script>
-	<script src=" /D3/js/d3.min.v4.js"></script>
-	<script src=" /D3/js/select2.js"></script>
-	<script src=" /D3/js/jquery_ui.js"></script>
+	<script src="/D3/js/semantic.js" ></script>
+	<script src="/D3/js/d3.min.v4.js"></script>
+	<script src="/D3/js/select2.js"></script>
+	<script src="/D3/js/jquery_ui.js"></script>
 	<script src="/D3/js/jquery_context.js"></script>
 <link rel="stylesheet" href="/D3/css/jquery_ui.css">
     <title>Representing Coobo Database using D3</title>
@@ -40,7 +40,7 @@
 	}
 	else
 	{
-	$(this).css('background-color', '#003399');
+	$(this).css('background-color',  $(this).attr('clr'));
 	$(this).children().css('color', 'white');
 	$(this).css('box-shadow', '5px 4px 5px 3px #31649bee');
 	$(this).attr('active',1) 
@@ -111,6 +111,15 @@ position: relative;
 position:relative
 }
 
+.text_class
+{
+ pointer-events: none; 
+padding-left:5px;
+padding-top:4px ;
+padding-bottom:2px ;
+text-align: center; vertical-align: middle;
+}
+
 div.tooltip {	
     position: absolute;			
     text-align: center;			
@@ -155,13 +164,13 @@ $(document).ready(function() {
 	
 <div style='position:relative;width:75%;height:130%;display:inline-block;left:10%'>
 <div id="sortable" style='position:relative;display:inline-block'>
-   <div class='hasmenu Heirarchy' sp="circle" cf="PerComplete" active=1 style='border: 2px solid #008;background-color:#003399;box-shadow:5px 4px 5px 3px #31649bee' id='Grade'   > <span  style="top: 29px;color: white;font-weight: bolder;position:relative;text-align:center">  Grade </span></div> 
-  <div class='hasmenu Heirarchy' sp="circle"  cf="PerComplete" active=1 style='border: 2px solid #008;background-color:#003399;box-shadow:5px 4px 5px 3px #31649bee' id='Subject'  > <span  style="top: 29px;color: white;font-weight: bolder;position:relative;text-align:center">  Subject </span></div> 
-  <div class='hasmenu Heirarchy' sp="circle"  cf="PerComplete" active=1 style='border: 2px solid #008;background-color:#003399;box-shadow:5px 4px 5px 3px #31649bee' id='Unit'   > <span  style="top: 29px;color: white;font-weight: bolder;position:relative;text-align:center">  Unit </span></div> 
-  <div class='hasmenu Heirarchy' sp="circle"  cf="PerComplete"  active=1 style='border: 2px solid #008;background-color:#003399;box-shadow:5px 4px 5px 3px #31649bee' id='Chapter'  > <span  style="top: 29px;color: white;font-weight: bolder;position:relative;text-align:center">  Chapter </span></div> 
-  <div class='hasmenu Heirarchy' sp="circle"  cf="PerComplete"  active=0 style='border: 2px solid #eee;background-color:#eee;box-shadow:rgba(138, 140, 141, 0.933) 5px 4px 5px 3px' id='Topic' > <span  style="top: 29px;color: black;font-weight: bolder;position:relative;text-align:center">  Topic </span> </div>
-   <div class='hasmenu Heirarchy' sp="circle"  cf="PerComplete" active=0 style='border: 2px solid #eee;background-color:#eee;box-shadow:rgba(138, 140, 141, 0.933) 5px 4px 5px 3px' id='Concept'  > <span  style="top: 29px;color: black;font-weight: bolder;position:relative;text-align:center">  Concept </span></div>
-   <div class='hasmenu Heirarchy' sp="circle"  cf="PerComplete" active=0 style='border: 2px solid #eee;background-color:#eee;box-shadow:rgba(138, 140, 141, 0.933) 5px 4px 5px 3px' id='CooboTitles'  > <span  style="top: 29px;color: black;font-weight: bolder;position:relative;text-align:center"> CooboTitles </span> </div>
+   <div class='hasmenu Heirarchy' clr="blue" sp="circle" cf="PerComplete" active=1 style='border: 2px solid #008;background-color:blue;box-shadow:5px 4px 5px 3px #31649bee' id='Grade'   > <span  style="  pointer-events: none;  top: 29px;color: white;font-weight: bolder;position:relative;text-align:center">  Grade </span></div> 
+  <div class='hasmenu Heirarchy' clr="green" sp="circle"  cf="PerComplete" active=1 style='border: 2px solid #008;background-color:green;box-shadow:5px 4px 5px 3px #31649bee' id='Subject'  > <span  style=" pointer-events: none;  top: 29px;color: white;font-weight: bolder;position:relative;text-align:center">  Subject </span></div> 
+  <div class='hasmenu Heirarchy' clr="yellow" sp="circle"  cf="PerComplete" active=1 style='border: 2px solid #008;background-color:yellow;box-shadow:5px 4px 5px 3px #31649bee' id='Unit'   > <span  style=" pointer-events: none;  top: 29px;color: white;font-weight: bolder;position:relative;text-align:center">  Unit </span></div> 
+  <div class='hasmenu Heirarchy' clr="orange" sp="circle"  cf="PerComplete"  active=1 style='border: 2px solid #008;background-color:orange;box-shadow:5px 4px 5px 3px #31649bee' id='Chapter'  > <span  style=" pointer-events: none;  top: 29px;color: white;font-weight: bolder;position:relative;text-align:center">  Chapter </span></div> 
+  <div class='hasmenu Heirarchy' clr="red" sp="circle"  cf="PerComplete"  active=0 style='border: 2px solid #eee;background-color:#eee;box-shadow:rgba(138, 140, 141, 0.933) 5px 4px 5px 3px' id='Topic' > <span  style=" pointer-events: none;  top: 29px;color: black;font-weight: bolder;position:relative;text-align:center">  Topic </span> </div>
+   <div class='hasmenu Heirarchy' clr="white" sp="circle"  cf="PerComplete" active=0 style='border: 2px solid #eee;background-color:#eee;box-shadow:rgba(138, 140, 141, 0.933) 5px 4px 5px 3px' id='Concept'  > <span  style=" pointer-events: none;  top: 29px;color: black;font-weight: bolder;position:relative;text-align:center">  Concept </span></div>
+   <div class='hasmenu Heirarchy' clr="grey" sp="circle"  cf="PerComplete" active=0 style='border: 2px solid #eee;background-color:#eee;box-shadow:rgba(138, 140, 141, 0.933) 5px 4px 5px 3px' id='CooboTitles'  > <span  style=" pointer-events: none;  top: 29px;color: black;font-weight: bolder;position:relative;text-align:center"> CooboTitles </span> </div>
 
   
   
@@ -201,7 +210,9 @@ $(document).ready(function() {
 
 
 
-<div style='display:none'> <input id="shape1" /><input id="shape2" /><input id="shape3" /><input id="shape4" /><input id="shape5" /><input id="shape6" /><input id="shape7" /> </div>
+<div style='display:none'> <input id="shape1"/><input id="shape2"/><input id="shape3"/><input id="shape4"/><input id="shape5"/><input id="shape6"/><input id="shape7"/> </div>
+<div style='display:none'> <input id="color1"/><input id="color2"/><input id="color3"/><input id="color4"/><input id="color5"/><input id="color6"/><input id="color7"/> </div>
+
 </div>
 <script>
 
@@ -246,8 +257,6 @@ var result = []
 	$("#Level6").val("None")
 	$("#Level7").val("None")
 	
-
-	
 	
  var we = document.getElementById('sortable').children
  for(i =0; i< we.length; i++)
@@ -256,7 +265,8 @@ var result = []
 	{
 	
 	$("#Level"+iter).val(we.item(i).id)
-	$("#Color_L"+iter).val(we.item(i).attributes.cf.value)
+	$("#color"+iter).val(we.item(i).attributes.clr.value)
+	
 	$("#shape"+iter).val(we.item(i).attributes.sp.value)
 	iter=iter +1
 	
@@ -676,7 +686,7 @@ var nodeGroup = g.append("g")
 
 var node = nodeGroup.append("circle")
         .attr("r", function(d) { return d.size; })
-       .attr("fill", function(d) { return color(d.group); })
+       .attr("fill", function(d) { return( $("#color"+d.group).val() )}  )
 	    .on("mouseover", function(d) {
             div.transition()		
                 .duration(200)		
@@ -695,16 +705,25 @@ var node = nodeGroup.append("circle")
 	    .style("stroke-width", "1")
 
 		
-var arcs = nodeGroup.append("path")
+/*var arcs = nodeGroup.append("path")
     .attr("fill","none")
 	.attr("id", function(d,i){return "s"+i;})
     .attr("d", function(d,i) {
         return describeArc(  d.r )
     } );
-	
+	*/
    
 
-var text = nodeGroup.append("text")
+   
+ var text =  nodeGroup.append("foreignObject")
+    .attr("width", function(d){return(2*d.size)})
+	.attr("class", "text_class")
+    .attr("height", function(d){return(2*d.size)})
+    .style("font", "6px 'Helvetica Neue'")
+    .html(function(d){return d.id;});
+	
+	
+/*var text = nodeGroup.append("text")
 	.attr("font-size",10)
     .style("text-anchor","middle")
     .append("textPath")
@@ -712,7 +731,7 @@ var text = nodeGroup.append("text")
     .attr("startOffset",function(d,i){return "50%";})
 
     .text(function(d){return d.id;})
-
+*/
 
 	
 	
@@ -786,15 +805,11 @@ function tickActions() {
         .attr("cy", function(d) { return d.y; });
         
 
-	arcs
-		.attr("d", function(d) { 
-var c1 = d.x-d.size;
-var c2 = d.x+d.size	;
-		var dcal = [
-        "M", c1, d.y, 
-        "A", 1,1,0,0,1,c2, d.y
-    ].join(" "); return dcal	 })
-       
+	text
+	 .attr("x", function(d) { return d.x - d.size; })
+        .attr("y", function(d) { return d.y - d.size; });
+		
+	
     //update link positions 
     link
         .attr("x1", function(d) { return d.source.x; })
@@ -1050,11 +1065,31 @@ $(document).contextmenu({
   }, {
     title: "Color",
     children: [{
-      title: "Default",
-       cmd: "Default"
+      title: "Blue",
+       cmd: "blue"
     }, {
-      title: "%Complete/ProjectStage",
-      cmd: "PerComplete"
+      title: "Green",
+      cmd: "green"
+      
+    },{
+      title: "Yellow",
+      cmd: "yellow"
+      
+    },{
+      title: "Orange",
+      cmd: "orange"
+      
+    },{
+      title: "white",
+      cmd: "white"
+      
+    },{
+      title: "red",
+      cmd: "red"
+      
+    },{
+      title: "grey",
+      cmd: "grey"
       
     }, ]
   }],
@@ -1069,8 +1104,15 @@ $(document).contextmenu({
         CLIPBOARD = "";
         break
     }
-    if(ui.cmd == "Default" | ui.cmd == "PerComplete")
-	{$target.attr("cf", ui.cmd)}
+    if(ui.cmd == "grey" | ui.cmd == "red" | ui.cmd == "white" | ui.cmd== 'orange' | ui.cmd== 'yellow' | ui.cmd== 'green' | ui.cmd== 'blue')
+	{
+	$target.attr("clr", ui.cmd);
+	$target.attr('active',1) 
+	$target.css('box-shadow', '5px 4px 5px 3px #31649bee');
+	$target.css('background-color',  ui.cmd);
+	$target.children().css('color', 'white');
+	$target.css('border', '2px solid #008');
+	}
 	else {$target.attr("sp", ui.cmd)}
 	
     // Optionally return false, to prevent closing the menu now
