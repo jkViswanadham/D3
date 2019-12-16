@@ -155,13 +155,14 @@ $(document).ready(function() {
 	
 <div style='position:relative;width:75%;height:130%;display:inline-block;left:10%'>
 <div id="sortable" style='position:relative;display:inline-block'>
+   <div class='hasmenu Heirarchy' cf="PerComplete" active=1 style='border: 2px solid #008;background-color:#003399;box-shadow:5px 4px 5px 3px #31649bee' id='Grade'   > <span  style="top: 29px;color: white;font-weight: bolder;position:relative;text-align:center">  Grade </span></div> 
   <div class='hasmenu Heirarchy' cf="PerComplete" active=1 style='border: 2px solid #008;background-color:#003399;box-shadow:5px 4px 5px 3px #31649bee' id='Subject'  > <span  style="top: 29px;color: white;font-weight: bolder;position:relative;text-align:center">  Subject </span></div> 
   <div class='hasmenu Heirarchy' cf="PerComplete" active=1 style='border: 2px solid #008;background-color:#003399;box-shadow:5px 4px 5px 3px #31649bee' id='Unit'   > <span  style="top: 29px;color: white;font-weight: bolder;position:relative;text-align:center">  Unit </span></div> 
   <div class='hasmenu Heirarchy' cf="PerComplete"  active=1 style='border: 2px solid #008;background-color:#003399;box-shadow:5px 4px 5px 3px #31649bee' id='Chapter'  > <span  style="top: 29px;color: white;font-weight: bolder;position:relative;text-align:center">  Chapter </span></div> 
   <div class='hasmenu Heirarchy' cf="PerComplete"  active=0 style='border: 2px solid #eee;background-color:#eee;box-shadow:rgba(138, 140, 141, 0.933) 5px 4px 5px 3px' id='Topic' > <span  style="top: 29px;color: black;font-weight: bolder;position:relative;text-align:center">  Topic </span> </div>
    <div class='hasmenu Heirarchy'  cf="PerComplete" active=0 style='border: 2px solid #eee;background-color:#eee;box-shadow:rgba(138, 140, 141, 0.933) 5px 4px 5px 3px' id='Concept'  > <span  style="top: 29px;color: black;font-weight: bolder;position:relative;text-align:center">  Concept </span></div>
    <div class='hasmenu Heirarchy' cf="PerComplete" active=0 style='border: 2px solid #eee;background-color:#eee;box-shadow:rgba(138, 140, 141, 0.933) 5px 4px 5px 3px' id='CooboTitles'  > <span  style="top: 29px;color: black;font-weight: bolder;position:relative;text-align:center"> CooboTitles </span> </div>
-   <div class='hasmenu Heirarchy' cf="PerComplete" active=0 style='  border: 2px solid #eee; background-color:#eee;box-shadow:rgba(138, 140, 141, 0.933) 5px 4px 5px 3px' id='Grade' oncontextmenu= "funccm()"  > <span  style="top: 29px;color: black;font-weight: bolder;position:relative;text-align:center">  Grade </span></div> 
+
   
   
 </div>
@@ -185,10 +186,10 @@ $(document).ready(function() {
 <div style='position:relative;width:15%;display:none;vertical-align: top;'>
 <div> 
 <h1>Chart Attributes</h1>
-	Level-1:<br> Definition:<select id='Level1' onchange='LevelChange(1)'>  <option value='Grade'>Grade</option> <option value='Subject' selected>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles'>CooboTitles</option> </select> <br>Color: <select id='Color_L1'><option value='Default'>Default- Level</option><option value='PerComplete' selected>PerComplete</option></select>
-	<br><br>Level-2:<br> Definition:<select id='Level2' onchange='LevelChange(2)'>  <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit' selected>Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles'>CooboTitles</option> </select><br> Color: <select id='Color_L2'><option value='Default'>Default- Level</option><option value='PerComplete' selected>PerComplete</option></select>
-	<br><br>Level-3:<br> Definition:<select id='Level3' onchange='LevelChange(3)'> <option value='None'>None</option> <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter' selected>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles'>CooboTitles</option> </select> <br>Color: <select id='Color_L3'><option value='Default' selected>Default- Level</option><option value='PerComplete'>PerComplete</option></select>
-	<br><br>Level-4:<br> Definition:<select id='Level4' onchange='LevelChange(4)'> <option value='None' selected>None</option> <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic' >Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles'>CooboTitles</option> </select><br> Color: <select id='Color_L4'><option value='Default' selected>Default- Level</option><option value='PerComplete'>PerComplete</option></select>
+	Level-1:<br> Definition:<select id='Level1' onchange='LevelChange(1)'>  <option value='Grade'  selected>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles'>CooboTitles</option> </select> <br>Color: <select id='Color_L1'><option value='Default'>Default- Level</option><option value='PerComplete' selected>PerComplete</option></select>
+	<br><br>Level-2:<br> Definition:<select id='Level2' onchange='LevelChange(2)'>  <option value='Grade'>Grade</option> <option value='Subject'  selected>Subject</option>  <option value='Unit' >Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles'>CooboTitles</option> </select><br> Color: <select id='Color_L2'><option value='Default'>Default- Level</option><option value='PerComplete' selected>PerComplete</option></select>
+	<br><br>Level-3:<br> Definition:<select id='Level3' onchange='LevelChange(3)'> <option value='None'>None</option> <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit'  selected>Unit</option> <option value='Chapter' >Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles'>CooboTitles</option> </select> <br>Color: <select id='Color_L3'><option value='Default' selected>Default- Level</option><option value='PerComplete'>PerComplete</option></select>
+	<br><br>Level-4:<br> Definition:<select id='Level4' onchange='LevelChange(4)'> <option value='None' >None</option> <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter'  selected>Chapter</option>  <option value='Topic' >Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles'>CooboTitles</option> </select><br> Color: <select id='Color_L4'><option value='Default' selected>Default- Level</option><option value='PerComplete'>PerComplete</option></select>
 	<br><br>Level-5:<br> Definition:<select id='Level5' onchange='LevelChange(5)'> <option value='None' selected>None</option> <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept' >Concept</option> <option value='CooboTitles'>CooboTitles</option> </select><br> Color: <select id='Color_L5'><option value='Default' selected>Default- Level</option><option value='PerComplete'>PerComplete</option></select>
 	<br><br>Level-6:<br> Definition:<select id='Level6' onchange='LevelChange(6)'> <option value='None' selected>None</option> <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles' >CooboTitles</option> </select> <br>Color: <select id='Color_L6'><option value='Default'>Default- Level</option><option value='PerComplete'>PerComplete</option></select>
 	<br><br>Level-7:<br> Definition:<select id='Level7' onchange='LevelChange(7)'> <option value='None' selected>None</option> <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles' >CooboTitles</option> </select> <br>Color: <select id='Color_L7'><option value='Default'>Default- Level</option><option value='PerComplete'>PerComplete</option></select>
@@ -309,7 +310,7 @@ var data_k = data.map((e)=>{
   
 
  
- var root = {"name":"embibe", "children": []};
+ var root = {"name":"NCERT", "children": []};
 		for(var i=0; i<nested.length; i++) {
 		result = {"name":nested[i].key,"children":[]}
 			for(var j=0; j<nested[i].values.length;j++)
@@ -341,7 +342,7 @@ var data_k = data.map((e)=>{
   }).entries(data_k);
   
  
- var root = {"name":"embibe", "children": []};
+ var root = {"name":"NCERT", "children": []};
 		for(var i=0; i<nested.length; i++) {
 		result = {"name":nested[i].key,"children":[]}
 			for(var j=0; j<nested[i].values.length;j++)
@@ -381,7 +382,7 @@ var data_k = data.map((e)=>{
   }).entries(data_k);
   
  
- var root = {"name":"embibe", "children": []};
+ var root = {"name":"NCERT", "children": []};
 		for(var i=0; i<nested.length; i++) {
 		result = {"name":nested[i].key,"children":[]}
 			for(var j=0; j<nested[i].values.length;j++)
@@ -428,7 +429,7 @@ else if(Level6_sel == 'None')
   }).entries(data_k);
   
  
- var root = {"name":"embibe", "children": []};
+ var root = {"name":"NCERT", "children": []};
 		for(var i=0; i<nested.length; i++) {
 		result = {"name":nested[i].key,"children":[]}
 			for(var j=0; j<nested[i].values.length;j++)
@@ -481,7 +482,7 @@ else if(Level7_sel == 'None')
   }).entries(data_k);
   
  
- var root = {"name":"embibe", "children": []};
+ var root = {"name":"NCERT", "children": []};
 		for(var i=0; i<nested.length; i++) {
 		result = {"name":nested[i].key,"children":[]}
 			for(var j=0; j<nested[i].values.length;j++)
@@ -536,7 +537,7 @@ var nested =
   }).entries(data_k);
   
  
- var root = {"name":"embibe", "children": []};
+ var root = {"name":"NCERT", "children": []};
 		for(var i=0; i<nested.length; i++) {
 		result = {"name":nested[i].key,"children":[]}
 			for(var j=0; j<nested[i].values.length;j++)
@@ -884,7 +885,8 @@ function getcolorofnode(ddepth,ddataname)
     .enter().append("circle")
       .attr("class", function(d) { return d.parent ? d.children ? "node" : "node node--leaf" : "node node--root"; })
       .style("fill", function(d) {   return getcolorofnode(d.depth, d.data.name) })
-	  
+	   .style("stroke", "#666")
+	    .style("stroke-width", "1")
       .on("click", function(d) {  ; if (focus !== d) zoomfun(d), d3.event.stopPropagation(); })
 	   .on("mouseover", function(d) {
 		if(d.depth ==0){level_sel = "Level: "+ d.data.name}
