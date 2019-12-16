@@ -1,0 +1,1063 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/D3/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/D3/css/semantic.css">
+	<link rel="stylesheet" href="/D3/css/select2.css">
+
+	<script src="/D3/js/jquery.js"></script>
+    <script src="/D3/js/popper.js"></script>
+    <script src="/D3/js/bootstrap.min.js" ></script>
+	<script src="/D3/js/semantic.js" ></script>
+	<script src="/D3/js/d3.min.v4.js"></script>
+	<script src="/D3/js/select2.js"></script>
+	 <script src="/D3/js/jquery_ui.js"></script>
+	 	 <script src="/D3/js/jquery_context.js"></script>
+<link rel="stylesheet" href="/D3/css/jquery_ui.css">
+    <title>Representing Coobo Database using D3</title>
+  </head>
+  <script>
+  
+  $( function() {
+    $( "#sortable" ).sortable();
+    $( "#sortable" ).disableSelection();
+	$('.Heirarchy').click(function(){
+	eleid =  $(this).attr('id')
+	isactive =  $(this).attr('active')
+	if(isactive == 1)
+	{
+	$(this).css('background-color', '#eee');
+	$(this).children().css('color', 'black');
+	$(this).attr('active',0) 
+	$(this).css('box-shadow', 'rgba(138, 140, 141, 0.933) 5px 4px 5px 3px');
+	$(this).css('border', '2px solid #eee');
+	}
+	else
+	{
+	$(this).css('background-color', '#003399');
+	$(this).children().css('color', 'white');
+	$(this).css('box-shadow', '5px 4px 5px 3px #31649bee');
+	$(this).attr('active',1) 
+	$(this).css('border', '2px solid #008');
+	;
+	
+	}
+	
+	
+	})
+	})
+	
+  </script>
+  <style>
+  
+  .loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+   .Heirarchy{
+position: relative;
+    display: inline-block;
+    width: 90px !important;
+    height: 90px !important;;
+    border-radius: 45px 45px 45px 45px;
+    margin-right: 12px !important;
+	text-align:center;
+  
+  }
+  
+  .node {
+  cursor: pointer;
+}
+
+.node:hover {
+  stroke: #000;
+  stroke-width: 1.5px;
+}
+
+.node--leaf {
+  fill: white;
+}
+
+.label {
+ font-size:11px;
+ text-anchor: middle;
+  
+}
+
+.Dropdown_placeholder_filter{
+position:relative
+}
+
+ .label_class{ 
+  pointer-events: none;  
+  }
+
+div.tooltip {	
+    position: absolute;			
+    text-align: center;			
+   				
+    padding: 2px;				
+    font: 12px sans-serif;		
+    background: lightsteelblue;	
+    border: 0px;		
+    border-radius: 8px;			
+    pointer-events: none;			
+}
+  </style>
+  <body>
+ 
+ <script>
+ 
+
+
+$(document).ready(function() {
+    $('.js-example-basic-multiple').select2();
+});
+
+</script> 
+
+<div    style='left: 39px;position: relative;top: 12px;position:relative;height:100%'>
+<div style='position:relative;width:15%;display:inline-block;vertical-align: top;'>
+	<h1 style="position:relative;left:40px">FILTERS</h1>
+	<button style="position:relative;display:inline-block;left:28%" type="button" class="btn btn-primary" onclick="reset()"> Clear All</button>
+		<div class='Dropdown_placeholder_filter'> Grade <select  multiple="multiple" class="ui fluid search dropdown"  multiple="" id='Grade_Filter' multiple onchange="FilterChange('Grade')" ></select> </div>
+	   <div class='Dropdown_placeholder_filter'> Subject <select   multiple="multiple" class="ui fluid search dropdown"  multiple=""  id='Subject_Filter' multiple onchange="FilterChange('Subject')"></select> </div>
+	   <div class='Dropdown_placeholder_filter'> Unit <select style='position:relative;width:20%;display:inline-block' multiple="multiple" class="ui fluid search dropdown"  multiple=""  id='Unit_Filter' multiple onchange="FilterChange('Unit')"></select> </div>
+		<div class='Dropdown_placeholder_filter'>Chapter <select multiple="multiple" class="ui fluid search dropdown"  multiple=""  id='Chapter_Filter' multiple onchange="FilterChange('Chapter')"></select></div>
+		<div class='Dropdown_placeholder_filter'>Topic <select multiple="multiple" class="ui fluid search dropdown"  multiple=""  id='Topic_Filter' multiple onchange="FilterChange('Topic')">></select></div>
+<div class='Dropdown_placeholder_filter'>Concept <select multiple="multiple" class="ui fluid search dropdown"  multiple=""  id='Concept_Filter' multiple onchange="FilterChange('Concept')">></select></div>
+
+	
+</div>
+
+
+	
+<div style='position:relative;width:75%;height:130%;display:inline-block;left:10%'>
+<div id="sortable" style='position:relative;display:inline-block'>
+   <div class='hasmenu Heirarchy' cf="PerComplete" active=1 style='border: 2px solid #008;background-color:#003399;box-shadow:5px 4px 5px 3px #31649bee' id='Grade'   > <span  style="top: 29px;color: white;font-weight: bolder;position:relative;text-align:center">  Grade </span></div> 
+  <div class='hasmenu Heirarchy' cf="PerComplete" active=1 style='border: 2px solid #008;background-color:#003399;box-shadow:5px 4px 5px 3px #31649bee' id='Subject'  > <span  style="top: 29px;color: white;font-weight: bolder;position:relative;text-align:center">  Subject </span></div> 
+  <div class='hasmenu Heirarchy' cf="PerComplete" active=1 style='border: 2px solid #008;background-color:#003399;box-shadow:5px 4px 5px 3px #31649bee' id='Unit'   > <span  style="top: 29px;color: white;font-weight: bolder;position:relative;text-align:center">  Unit </span></div> 
+  <div class='hasmenu Heirarchy' cf="PerComplete"  active=1 style='border: 2px solid #008;background-color:#003399;box-shadow:5px 4px 5px 3px #31649bee' id='Chapter'  > <span  style="top: 29px;color: white;font-weight: bolder;position:relative;text-align:center">  Chapter </span></div> 
+  <div class='hasmenu Heirarchy' cf="PerComplete"  active=0 style='border: 2px solid #eee;background-color:#eee;box-shadow:rgba(138, 140, 141, 0.933) 5px 4px 5px 3px' id='Topic' > <span  style="top: 29px;color: black;font-weight: bolder;position:relative;text-align:center">  Topic </span> </div>
+   <div class='hasmenu Heirarchy'  cf="PerComplete" active=0 style='border: 2px solid #eee;background-color:#eee;box-shadow:rgba(138, 140, 141, 0.933) 5px 4px 5px 3px' id='Concept'  > <span  style="top: 29px;color: black;font-weight: bolder;position:relative;text-align:center">  Concept </span></div>
+   <div class='hasmenu Heirarchy' cf="PerComplete" active=0 style='border: 2px solid #eee;background-color:#eee;box-shadow:rgba(138, 140, 141, 0.933) 5px 4px 5px 3px' id='CooboTitles'  > <span  style="top: 29px;color: black;font-weight: bolder;position:relative;text-align:center"> CooboTitles </span> </div>
+
+  
+  
+</div>
+<br>
+<div style="position:relative;left:20%">
+ 	
+	
+	
+    
+<div style='display:inline-block;position:relative;top:31px; left:-10px'>  </div> 
+<span style="position:relative;top:25px;left:15px"> <b>Size:</b> <select id='Metric'  style='padding-top: 6px; padding-bottom: 6px;border-radius: 6px;'><option value='Scriptwriting'>Scriptwriting</option><option value='MediaFile'>MediaFile</option><option value='Production'>Production</option><option value='LengthofCoboo'>LengthofCoboo</option></select> </span>
+
+  
+	
+<button style="position:relative;display:inline-block;top:25px;left:15px" type="button" class="btn btn-primary" onclick="GraphParameterChange()"> Generate Chart</button>
+ 
+</div>
+
+<div id= 'PackCircle' style="top: 32px;position:relative;width:100%;height:90%"> </div>
+</div>
+<div style='position:relative;width:15%;display:none;vertical-align: top;'>
+<div> 
+<h1>Chart Attributes</h1>
+	Level-1:<br> Definition:<select id='Level1' onchange='LevelChange(1)'>  <option value='Grade'  selected>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles'>CooboTitles</option> </select> <br>Color: <select id='Color_L1'><option value='Default'>Default- Level</option><option value='PerComplete' selected>PerComplete</option></select>
+	<br><br>Level-2:<br> Definition:<select id='Level2' onchange='LevelChange(2)'>  <option value='Grade'>Grade</option> <option value='Subject'  selected>Subject</option>  <option value='Unit' >Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles'>CooboTitles</option> </select><br> Color: <select id='Color_L2'><option value='Default'>Default- Level</option><option value='PerComplete' selected>PerComplete</option></select>
+	<br><br>Level-3:<br> Definition:<select id='Level3' onchange='LevelChange(3)'> <option value='None'>None</option> <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit'  selected>Unit</option> <option value='Chapter' >Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles'>CooboTitles</option> </select> <br>Color: <select id='Color_L3'><option value='Default' selected>Default- Level</option><option value='PerComplete'>PerComplete</option></select>
+	<br><br>Level-4:<br> Definition:<select id='Level4' onchange='LevelChange(4)'> <option value='None' >None</option> <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter'  selected>Chapter</option>  <option value='Topic' >Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles'>CooboTitles</option> </select><br> Color: <select id='Color_L4'><option value='Default' selected>Default- Level</option><option value='PerComplete'>PerComplete</option></select>
+	<br><br>Level-5:<br> Definition:<select id='Level5' onchange='LevelChange(5)'> <option value='None' selected>None</option> <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept' >Concept</option> <option value='CooboTitles'>CooboTitles</option> </select><br> Color: <select id='Color_L5'><option value='Default' selected>Default- Level</option><option value='PerComplete'>PerComplete</option></select>
+	<br><br>Level-6:<br> Definition:<select id='Level6' onchange='LevelChange(6)'> <option value='None' selected>None</option> <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles' >CooboTitles</option> </select> <br>Color: <select id='Color_L6'><option value='Default'>Default- Level</option><option value='PerComplete'>PerComplete</option></select>
+	<br><br>Level-7:<br> Definition:<select id='Level7' onchange='LevelChange(7)'> <option value='None' selected>None</option> <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles' >CooboTitles</option> </select> <br>Color: <select id='Color_L7'><option value='Default'>Default- Level</option><option value='PerComplete'>PerComplete</option></select>
+	<br><br>
+	<br><br>
+	
+</div>
+</div>
+
+
+</div>
+<script>
+
+function LevelChange(level)
+{
+
+var Level1_sel = $("#Level1").val()
+  var Level2_sel = $("#Level2").val()
+  var Level3_sel = $("#Level3").val()
+  var Level4_sel = $("#Level4").val()
+  var Level5_sel = $("#Level5").val()
+  var Level6_sel = $("#Level6").val()
+  var Level7_sel = $("#Level7").val()
+  if(Level3_sel == "None" && (Level7_sel != "None" || Level6_sel != "None" || Level5_sel != "None" || Level4_sel != "None") )
+  {$("#Level4").val("None");$("#Level5").val("None");$("#Level6").val("None");$("#Level7").val("None")}
+  else if(Level4_sel == "None" && (Level7_sel != "None" || Level6_sel != "None" || Level5_sel != "None") ){$("#Level5").val("None");$("#Level6").val("None");$("#Level7").val("None")}
+  else if(Level5_sel == "None" && (Level7_sel != "None" || Level6_sel != "None")){$("#Level7").val("None");$("#Level6").val("None")}
+   else if(Level6_sel == "None" && (Level7_sel != "None")){$("#Level7").val("None")}
+
+  
+
+}
+
+function reset()
+{
+loadFilters('Basic')
+GraphParameterChange()
+}
+
+function GraphParameterChange()
+{
+
+
+
+var e = document.getElementById("Metric");
+var MericSel = e.options[e.selectedIndex].value;
+var nocircles = 0
+
+	iter=1
+	$("#Level1").val("None")
+	$("#Level2").val("None")
+	$("#Level3").val("None")
+	$("#Level4").val("None")
+	$("#Level5").val("None")
+	$("#Level6").val("None")
+	$("#Level7").val("None")
+	
+	$("#Color_L1").val("None")
+	$("#Color_L2").val("None")
+	$("#Color_L3").val("None")
+	$("#Color_L4").val("None")
+	$("#Color_L5").val("None")
+	$("#Color_L6").val("None")
+	$("#Color_L7").val("None")
+	
+ var we = document.getElementById('sortable').children
+ for(i =0; i< we.length; i++)
+ {
+ 	if(we.item(i).attributes.active.value == "1")
+	{
+	
+	$("#Level"+iter).val(we.item(i).id)
+	$("#Color_L"+iter).val(we.item(i).attributes.cf.value)
+	
+	iter=iter +1
+	
+	}
+ }
+
+
+var Level1_sel = $("#Level1").val()
+  var Level2_sel = $("#Level2").val()
+  var Level3_sel = $("#Level3").val()
+  var Level4_sel = $("#Level4").val()
+  var Level5_sel = $("#Level5").val()
+  var Level6_sel = $("#Level6").val()
+   var Level7_sel = $("#Level7").val()
+for(i=0; i< data.length; i++)
+{
+	if(MericSel == "Scriptwriting"){data[i]['Metric'] = data[i].Scriptwriting}
+	if(MericSel == "MediaFile"){data[i]['Metric'] = data[i].MediaFile}
+	if(MericSel == "Production"){data[i]['Metric'] = data[i].Production}
+	if(MericSel == "LengthofCoboo"){data[i]['Metric'] = data[i].LengthofCoboo}
+}
+		
+		
+var data_k = data.map((e)=>{
+  
+  if(Level3_sel == 'None'){return {"Level1":e[Level1_sel], "Level2":e[Level2_sel], "size": +e.Metric }}
+  if(Level4_sel == 'None'){return {"Level1":e[Level1_sel], "Level2":e[Level2_sel],"Level3":e[Level3_sel], "size": +e.Metric}}
+  if(Level5_sel == 'None'){return {"Level1":e[Level1_sel], "Level2":e[Level2_sel],"Level3":e[Level3_sel],"Level4":e[Level4_sel], "size": +e.Metric}}
+  if(Level5_sel == 'None'){return {"Level1":e[Level1_sel], "Level2":e[Level2_sel],"Level3":e[Level3_sel],"Level4":e[Level4_sel],"Level5":e[Level5_sel], "size": +e.Metric}}
+   if(Level6_sel == 'None'){return {"Level1":e[Level1_sel], "Level2":e[Level2_sel],"Level3":e[Level3_sel],"Level4":e[Level4_sel],"Level5":e[Level5_sel],"Level6":e[Level6_sel], "size": +e.Metric}}
+ return {"Level1":e[Level1_sel], "Level2":e[Level2_sel],"Level3":e[Level3_sel],"Level4":e[Level4_sel],"Level5":e[Level5_sel],"Level6":e[Level6_sel],"Level7":e[Level7_sel], "size": +e.Metric}
+ })
+
+ if(Level3_sel == 'None')
+ {
+ 
+ var nested = 
+	d3.nest()
+  .key(function(d) { return d.Level1; })
+  .key(function(d) { return d.Level2; })
+  .rollup(function(v) {
+     return {
+	 size: d3.sum(v, function(d) { return d.size; }),
+	}
+	
+  }).entries(data_k);
+  
+
+ 
+ var root = {"name":"NCERT", "children": []};
+		for(var i=0; i<nested.length; i++) {
+		result = {"name":nested[i].key,"children":[]}
+			for(var j=0; j<nested[i].values.length;j++)
+			{
+			result.children.push({"name":nested[i].values[j].key, "size": nested[i].values[j].value.size });
+			nocircles = nocircles+1	
+			
+			}
+			root.children.push(result)
+			nocircles = nocircles+1
+		}
+	
+}		
+ 
+ else if(Level4_sel == 'None')
+ {
+ 
+
+ var nested = 
+	d3.nest()
+  .key(function(d) { return d.Level1; })
+  .key(function(d) { return d.Level2; })
+  .key(function(d) { return d.Level3; })
+  .rollup(function(v) {
+     return {
+	 size: d3.sum(v, function(d) { return d.size; }),
+	}
+	
+  }).entries(data_k);
+  
+ 
+ var root = {"name":"NCERT", "children": []};
+		for(var i=0; i<nested.length; i++) {
+		result = {"name":nested[i].key,"children":[]}
+			for(var j=0; j<nested[i].values.length;j++)
+			{
+			result.children.push({"name":nested[i].values[j].key, "children": [ ] });
+			nocircles = nocircles+1
+				for(var k=0; k<nested[i].values[j].values.length;k++)
+				{
+				result.children[j].children.push({"name":nested[i].values[j].values[k].key, "size":nested[i].values[j].values[k].value.size });
+				nocircles = nocircles+1
+				}
+				
+			}
+			root.children.push(result)
+			nocircles = nocircles+1
+			
+		}
+	
+
+}		
+ 
+ else if(Level5_sel == 'None')
+ {
+ 
+
+ var nested = 
+	d3.nest()
+  .key(function(d) { return d.Level1; })
+  .key(function(d) { return d.Level2; })
+  .key(function(d) { return d.Level3; })
+  .key(function(d) { return d.Level4; })
+  .rollup(function(v) {
+     return {
+	 size: d3.sum(v, function(d) { return d.size; }),
+	}
+	
+  }).entries(data_k);
+  
+ 
+ var root = {"name":"NCERT", "children": []};
+		for(var i=0; i<nested.length; i++) {
+		result = {"name":nested[i].key,"children":[]}
+			for(var j=0; j<nested[i].values.length;j++)
+			{
+			result.children.push({"name":nested[i].values[j].key, "children": [ ] });
+			nocircles = nocircles+1
+				for(var k=0; k<nested[i].values[j].values.length;k++)
+				{
+				result.children[j].children.push({"name":nested[i].values[j].values[k].key,  "children": [ ] });
+				nocircles = nocircles+1
+				for(var l=0; l<nested[i].values[j].values[k].values.length;l++)
+				{
+					result.children[j].children[k].children.push({"name":nested[i].values[j].values[k].values[l].key, "size":nested[i].values[j].values[k].values[l].value.size });
+					nocircles = nocircles+1
+				}
+				}
+				
+			}
+			root.children.push(result)
+			nocircles = nocircles+1
+			
+		}
+	
+
+}
+
+
+else if(Level6_sel == 'None')
+ {
+ 
+
+ var nested = 
+	d3.nest()
+  .key(function(d) { return d.Level1; })
+  .key(function(d) { return d.Level2; })
+  .key(function(d) { return d.Level3; })
+  .key(function(d) { return d.Level4; })
+  .key(function(d) { return d.Level5; })
+  .rollup(function(v) {
+     return {
+	 size: d3.sum(v, function(d) { return d.size; }),
+	}
+	
+  }).entries(data_k);
+  
+ 
+ var root = {"name":"NCERT", "children": []};
+		for(var i=0; i<nested.length; i++) {
+		result = {"name":nested[i].key,"children":[]}
+			for(var j=0; j<nested[i].values.length;j++)
+			{
+			result.children.push({"name":nested[i].values[j].key, "children": [ ] });
+			nocircles = nocircles+1
+				for(var k=0; k<nested[i].values[j].values.length;k++)
+				{
+				result.children[j].children.push({"name":nested[i].values[j].values[k].key,  "children": [ ] });
+				nocircles = nocircles+1
+				for(var l=0; l<nested[i].values[j].values[k].values.length;l++)
+				{
+				result.children[j].children[k].children.push({"name":nested[i].values[j].values[k].values[l].key,  "children": [ ] });
+				nocircles = nocircles+1
+				for(var m=0; m<nested[i].values[j].values[k].values[l].values.length;m++)
+				{
+					result.children[j].children[k].children[l].children.push({"name":nested[i].values[j].values[k].values[l].values[m].key, "size":nested[i].values[j].values[k].values[l].values[m].value.size });
+					nocircles = nocircles+1
+				}
+				}
+				}
+				
+			}
+			root.children.push(result)
+			nocircles = nocircles+1
+			
+		}
+	
+
+}
+
+else if(Level7_sel == 'None')
+ {
+ 
+
+ var nested = 
+	d3.nest()
+  .key(function(d) { return d.Level1; })
+  .key(function(d) { return d.Level2; })
+  .key(function(d) { return d.Level3; })
+  .key(function(d) { return d.Level4; })
+  .key(function(d) { return d.Level5; })
+  .key(function(d) { return d.Level6; })
+  
+  .rollup(function(v) {
+     return {
+	 size: d3.sum(v, function(d) { return d.size; }),
+	}
+	
+  }).entries(data_k);
+  
+ 
+ var root = {"name":"NCERT", "children": []};
+		for(var i=0; i<nested.length; i++) {
+		result = {"name":nested[i].key,"children":[]}
+			for(var j=0; j<nested[i].values.length;j++)
+			{
+			result.children.push({"name":nested[i].values[j].key, "children": [ ] });
+			nocircles = nocircles+1
+				for(var k=0; k<nested[i].values[j].values.length;k++)
+				{
+				result.children[j].children.push({"name":nested[i].values[j].values[k].key,  "children": [ ] });
+				nocircles = nocircles+1
+				for(var l=0; l<nested[i].values[j].values[k].values.length;l++)
+				{
+				result.children[j].children[k].children.push({"name":nested[i].values[j].values[k].values[l].key,  "children": [ ] });
+				nocircles = nocircles+1
+				for(var m=0; m<nested[i].values[j].values[k].values[l].values.length;m++)
+				{
+				result.children[j].children[k].children[l].children.push({"name":nested[i].values[j].values[k].values[l].values[m].key,  "children": [ ] });
+				nocircles = nocircles+1
+				for(var n=0; n<nested[i].values[j].values[k].values[l].values[m].values.length;n++)
+				{
+					result.children[j].children[k].children[l].children[m].children.push({"name":nested[i].values[j].values[k].values[l].values[m].values[n].key, "size":nested[i].values[j].values[k].values[l].values[m].values[n].value.size });
+					nocircles = nocircles+1
+				}
+				}
+				}
+				}
+				
+			}
+			root.children.push(result)
+			nocircles = nocircles+1
+		}
+	
+
+}
+
+else
+{
+var nested = 
+	d3.nest()
+  .key(function(d) { return d.Level1; })
+  .key(function(d) { return d.Level2; })
+  .key(function(d) { return d.Level3; })
+  .key(function(d) { return d.Level4; })
+  .key(function(d) { return d.Level5; })
+  .key(function(d) { return d.Level6; })
+  .key(function(d) { return d.Level7; })
+  .rollup(function(v) {
+     return {
+	 size: d3.sum(v, function(d) { return d.size; }),
+	}
+	
+  }).entries(data_k);
+  
+ 
+ var root = {"name":"NCERT", "children": []};
+		for(var i=0; i<nested.length; i++) {
+		result = {"name":nested[i].key,"children":[]}
+			for(var j=0; j<nested[i].values.length;j++)
+			{
+			result.children.push({"name":nested[i].values[j].key, "children": [ ] });
+			nocircles = nocircles+1
+				for(var k=0; k<nested[i].values[j].values.length;k++)
+				{
+				result.children[j].children.push({"name":nested[i].values[j].values[k].key,  "children": [ ] });
+				nocircles = nocircles+1
+				for(var l=0; l<nested[i].values[j].values[k].values.length;l++)
+				{
+				result.children[j].children[k].children.push({"name":nested[i].values[j].values[k].values[l].key,  "children": [ ] });
+				nocircles = nocircles+1
+				for(var m=0; m<nested[i].values[j].values[k].values[l].values.length;m++)
+				{
+				result.children[j].children[k].children[l].children.push({"name":nested[i].values[j].values[k].values[l].values[m].key,  "children": [ ] });
+				nocircles = nocircles+1
+				for(var n=0; n<nested[i].values[j].values[k].values[l].values[m].values.length;n++)
+				{
+				result.children[j].children[k].children[l].children[m].children.push({"name":nested[i].values[j].values[k].values[l].values[m].values[n].key,  "children": [ ] });
+				nocircles = nocircles+1
+				for(var o=0; o<nested[i].values[j].values[k].values[l].values[m].values[n].values.length;o++)
+				{
+					result.children[j].children[k].children[l].children[m].children[n].children.push({"name":nested[i].values[j].values[k].values[l].values[m].values[n].values[o].key, "size":nested[i].values[j].values[k].values[l].values[m].values[n].values[o].value.size });
+					nocircles = nocircles+1
+				}
+				}
+				}
+				}
+				}
+				
+			}
+			root.children.push(result)
+			
+		}
+	
+}
+
+ Color_L1 = $('#Color_L1').val()
+ Color_L2 = $('#Color_L2').val()
+ Color_L3 = $('#Color_L3').val()
+ Color_L4 = $('#Color_L4').val()
+ Color_L5 = $('#Color_L5').val()
+ Color_L6 = $('#Color_L6').val()
+  Color_L7 = $('#Color_L7').val()
+ 
+ var colorRange = d3.scaleLinear()
+    .domain([0, 10])
+    .range(["hsl(0, 100%, 50%)", "hsl(87,100%,29%)"])
+    .interpolate(d3.interpolateHcl);
+	
+	
+
+
+
+
+function getnodecolor_final(Level_sel, Color_Level)
+{
+
+colorval =	d3.nest()
+  .key(function(d) { return d[Level_sel]; })
+  .rollup(function(v) {
+     return {
+	 color: colorRange(Math.round(v.filter(function(d) { return d.Stage == 4 }).length*10 /  v.length))
+	}
+}).entries(data);
+
+
+if(Level_sel =="CooboTitles")
+{
+
+colorval = 
+	d3.nest()
+  .key(function(d) { return d[Level_sel]; })
+  .rollup(function(v) {
+     return {
+		 color: colorRange2(d3.mean(v, function(d) { return d.Stage; }))
+	 
+	}
+}).entries(data)
+
+}
+
+
+
+
+
+return(colorval)
+}
+
+
+ 
+ 
+L1colorval = getnodecolor_final(Level1_sel,Color_L1 )
+L2colorval = getnodecolor_final(Level2_sel,Color_L2 )
+
+L3colorval = getnodecolor_final(Level3_sel,Color_L3 )
+L4colorval = getnodecolor_final(Level4_sel,Color_L4 )
+
+L5colorval = getnodecolor_final(Level5_sel,Color_L5 )
+L6colorval = getnodecolor_final(Level6_sel,Color_L6 )
+L7colorval = getnodecolor_final(Level7_sel,Color_L7 )
+
+
+ 
+ 
+ 
+ 
+ function colorRange2(colval)
+ {
+ var color = ""
+   if(colval==0){color = "hsl(0, 100%, 50%)"}
+	  if(colval==1){color =  "hsl(31, 100%, 45%)"}
+	  if(colval==2){color = "hsl(62, 100%, 45%)"}
+	  if(colval==3){color = "hsl(221, 100%, 22%)"}
+	  if(colval==4){color =  "hsl(104, 100%, 14%)"}
+	  return(color)
+ }
+ 
+ 
+ 
+ circlepacking(root,nocircles)
+ 
+}
+
+
+
+d3.csv("Taxonomy_new.csv", function(error, data) {
+  if (error) throw error;
+
+
+data_bk = data
+data = data
+loadFilters('Basic')
+GraphParameterChange()
+});
+
+function FilterChange(Changed){
+var GradeSel = $("#Grade_Filter").val();
+var SubjectSel = $("#Subject_Filter").val();
+var UnitSel = $("#Unit_Filter").val();
+var ChapterSel =  $("#Chapter_Filter").val();
+var TopicSel =  $("#Topic_Filter").val();
+var ConceptSel = $("#Concept_Filter").val();
+
+if(Changed == "Grade"){grade_f = GradeSel}
+if(Changed == "Subject"){subject_f = SubjectSel}
+if(Changed == "Unit"){unit_f = UnitSel}
+if(Changed == "Chapter"){chapter_f = ChapterSel}
+if(Changed == "Topic"){topic_f = TopicSel}
+if(Changed == "Concept"){concept_f = ConceptSel}
+
+
+
+
+data = data_bk.filter(function(d) { return  (grade_f == null ||  grade_f.length == 0 || grade_f.includes(d.Grade)) && ( subject_f == null || subject_f.length == 0 || subject_f.includes(d.Subject )) && (unit_f == null || unit_f.length == 0 || unit_f.includes(d.Unit)) && (chapter_f == null ||chapter_f.length == 0 || chapter_f.includes(d.Chapter)) && (topic_f == null ||topic_f.length == 0 ||topic_f.includes(d.Topic)) && (concept_f == null || concept_f.length == 0 ||concept_f.includes(d.Concept)) } );
+
+loadFilters(Changed)
+GraphParameterChange()
+
+}
+
+
+function loadFilters(step)
+{
+
+	if(step=="Basic")
+	{
+	data = data_bk
+	grade_f = []
+	subject_f = []
+	unit_f = []
+	chapter_f = []
+	topic_f = []
+	concept_f =[]
+	
+	$("#Grade_Filter").parent().find('a').remove()
+	$("#Subject_Filter").parent().find('a').remove()
+	$("#Unit_Filter").parent().find('a').remove()
+	$("#Chapter_Filter").parent().find('a').remove()
+	$("#Topic_Filter").parent().find('a').remove()
+	$("#Concept_Filter").parent().find('a').remove()
+	}
+	
+	var Grade = []
+	var Subject = []
+	var Unit = []
+	var Chapter = []
+	var Topic = []
+	var Concept = []
+	
+	for(var i=0; i<data.length; i++) {
+		if(Grade.indexOf(data[i].Grade) ===  -1){Grade.push( data[i].Grade )}
+		if(Subject.indexOf(data[i].Subject) ===  -1){Subject.push( data[i].Subject )}
+		if(Unit.indexOf(data[i].Unit) ===  -1){Unit.push( data[i].Unit )}
+		if(Chapter.indexOf(data[i].Chapter) ===  -1){Chapter.push( data[i].Chapter   )}
+		if(Topic.indexOf(data[i].Topic) ===  -1){Topic.push( data[i].Topic )}
+		if(Concept.indexOf(data[i].Concept) ===  -1){Concept.push( data[i].Concept )}
+	} 
+	
+if(step!="Grade"){
+$('#Grade_Filter').empty()
+var selectBox = document.getElementById('Grade_Filter');
+	for(var i = 0, l = Grade.length; i < l; i++){selectBox.options.add( new Option(Grade[i], Grade[i]) );}
+}
+if(step!="Subject"){
+$('#Subject_Filter').empty()
+	var selectBox = document.getElementById('Subject_Filter');
+	for(var i = 0, l = Subject.length; i < l; i++){ selectBox.options.add( new Option(Subject[i], Subject[i]) ); }	
+}
+if(step!="Unit"){
+$('#Unit_Filter').empty()
+	var selectBox = document.getElementById('Unit_Filter');
+	for(var i = 0, l = Unit.length; i < l; i++){ selectBox.options.add( new Option(Unit[i], Unit[i]) ); }
+}
+if(step!="Chapter"){
+$('#Chapter_Filter').empty()
+	var selectBox = document.getElementById('Chapter_Filter');
+	for(var i = 0, l = Chapter.length; i < l; i++){ selectBox.options.add( new Option(Chapter[i], Chapter[i]) ); }
+}
+if(step!="Topic"){
+$('#Topic_Filter').empty()
+	var selectBox = document.getElementById('Topic_Filter');
+	for(var i = 0, l = Topic.length; i < l; i++){ selectBox.options.add( new Option(Topic[i], Topic[i]) ); }
+}
+if(step!="Concept"){
+$('#Concept_Filter').empty()
+	var selectBox = document.getElementById('Concept_Filter');
+	for(var i = 0, l = Concept.length; i < l; i++){ selectBox.options.add( new Option(Concept[i], Concept[i]) ); }
+}
+	
+	
+
+	
+	
+
+	
+
+	
+}
+
+
+let width = 960,
+    height = 700,
+    radius = (Math.min(width, height) / 2) - 10,
+    node
+  
+
+
+const x = d3.scaleLinear().range([0, 2 * Math.PI])
+const y = d3.scaleLinear().range([0, radius])
+
+const colors = d3.scaleOrdinal(d3.schemeCategory20)
+const partition = d3.partition()
+
+const arc = d3.arc()
+  .startAngle(d => Math.max(0, Math.min(2 * Math.PI, x(d.x0))))
+  .endAngle(d => Math.max(0, Math.min(2 * Math.PI, x(d.x1))))
+  .innerRadius(d => Math.max(0, y(d.y0)))
+  .outerRadius(d => Math.max(0, y(d.y1)))
+  
+
+function circlepacking(root,nocircles){
+
+d3.select("#PackCircle").selectAll("*").remove();
+
+var svg = d3.select('#PackCircle')
+              .append('svg')
+              .attr('width', width)
+              .attr('height', height)
+              .append('g')
+              .attr('transform', 'translate(' + width / 2 + ',' + (height / 2) + ')')
+			  
+
+  const gSlices = svg.selectAll('g').data(partition(d3.hierarchy(root).sum(d => d.size)).descendants(), function (d) { return d.data.id }).enter().append('g')
+
+  gSlices.exit().remove()
+  
+  gSlices.append('path')
+         .style('fill', function (d) { 
+           if (d.depth === 0) return 'white'
+           return colors(d.x0)
+         })
+         .on('click', click)
+
+  gSlices.append('text')
+		 .attr("class",'label_class')
+         .attr('dy', '.35em')
+         .text(function (d) { return d.parent ? d.data.name : '' })
+         .attr('id', function (d) { return 'w' + d.data.name })
+         .attr('fill', '#fff')
+		 .attr('z-index', '-100')
+
+  svg.selectAll('path')
+     .transition('update')
+     .duration(750).attrTween('d', function (d, i) {
+       return arcTweenPath(d, i)
+     })
+
+  svg.selectAll('text')
+     .transition('update')
+     .duration(750)
+     .attrTween('transform', function (d, i) { return arcTweenText(d, i)})
+     .attr('text-anchor', function (d) { 
+       return d.textAngle > 180 ? 'start' : 'end' 
+     })
+     .attr('dx', function (d) { 
+       return d.textAngle > 180 ? 27: 27
+     })
+     .attr('opacity', function (e) { 
+      return e.x1 - e.x0 > 0.01 ? 1 : 0 
+     })
+
+}
+
+function arcTweenText(a, i) {
+  var oi = d3.interpolate({ x0: (a.x0s ? a.x0s : 0), x1: (a.x1s ? a.x1s : 0), y0: (a.y0s ? a.y0s : 0), y1: (a.y1s ? a.y1s : 0) }, a)
+
+  function tween(t) {
+    var b = oi(t)
+    var ang = ((x((b.x0 + b.x1) / 2) - Math.PI / 2) / Math.PI * 180)
+
+    b.textAngle = (ang > 90) ? 180 + ang : ang
+    a.centroid = arc.centroid(b)
+
+    return 'translate(' + arc.centroid(b) + ')rotate(' + b.textAngle + ')'
+  }
+  return tween
+}
+  
+function arcTweenPath(a, i) {
+  var oi = d3.interpolate({ x0: (a.x0s ? a.x0s : 0), x1: (a.x1s ? a.x1s : 0), y0: (a.y0s ? a.y0s : 0), y1: (a.y1s ? a.y1s : 0) }, a)
+
+  function tween(t) {
+    var b = oi(t)
+
+    a.x0s = b.x0
+    a.x1s = b.x1
+    a.y0s = b.y0
+    a.y1s = b.y1
+
+    return arc(b)
+  }
+  if (i == 0 && node) { 
+
+    var xd = d3.interpolate(x.domain(), [node.x0, node.x1])
+    var yd = d3.interpolate(y.domain(), [node.y0, 1])
+    var yr = d3.interpolate(y.range(), [node.y0 ? 40 : 0, radius])
+
+    return function (t) {
+      x.domain(xd(t))
+      y.domain(yd(t)).range(yr(t))
+
+      return tween(t)
+    }
+  } else {
+    // first build
+    return tween
+  }
+}
+
+function click(d) {
+  node = d
+  const total = d.x1 - d.x0
+
+   svg = d3.select('#PackCircle').select("svg").select("g")
+              
+  svg.selectAll('path')
+     .transition('click')
+     .duration(750)
+     .attrTween('d', function (d, i) { return arcTweenPath(d, i)})
+
+  svg.selectAll('text')
+     .transition('click')
+     .attr('opacity', 1)
+     .duration(750)
+     .attrTween('transform', function (d, i) { 
+       return arcTweenText(d) 
+      })
+     .attr('text-anchor', function (d) { 
+       return d.textAngle > 180 ? 'start' : 'end'
+     })
+     .attr('dx', function (d) {
+       if(d.data.name.length > 3) {
+         return d.textAngle > 180 ? -23 : 23
+       }
+       return d.textAngle > 180 ? -13 : 13
+     })
+     .attr('opacity', function (e) {
+       // hide & show text
+       if (e.x0 >= d.x0 && e.x1 <= (d.x1 + 0.0000000000000001)) {
+         const arcText = d3.select(this.parentNode).select('text')
+         arcText.attr('visibility', function(d) {
+           return (d.x1 - d.x0) / total < 0.01 ? 'hidden' : 'visible' 
+         })
+       } else {
+         return 0
+       }
+     })
+ }
+  
+
+
+</script>
+
+<script>
+	$('.dropdown').dropdown({
+  label: {
+    duration: 0,
+  },
+  debug: true,
+  performance: true,
+});
+
+$('.ui.checkbox')
+  .checkbox({
+    onChecked() {
+      const options = $('#members_dropdown > option').toArray().map(
+        (obj) => obj.value
+      );
+      $('#members_dropdown').dropdown('set exactly', options);
+    },
+    onUnchecked() {
+      $('#members_dropdown').dropdown('clear');
+    },
+  });
+</script>
+
+
+<style>
+.hasmenu,
+.hasmenu2 {
+
+  margin: 3px;
+  padding: 5px;
+  width: 30px;
+}
+
+/* Optionally define a fixed width for menus */
+.ui-menu {
+  width: 220px;
+  background-color: black;
+}
+
+/* Allow to use <kbd> elements inside the title to define shortcut hints. */
+.ui-menu kbd {
+  padding-left: 1em;
+  float: right;
+}
+
+/* Define a custom icon */
+.ui-icon.custom-icon-firefox {
+  background-image: url(application_firefox.gif);
+  background-position: 0 0;
+}
+
+</style>
+
+<script>
+var CLIPBOARD;
+
+$(document).contextmenu({
+  delegate: ".hasmenu",
+  autoFocus: true,
+  preventContextMenuForPopup: true,
+  preventSelect: true,
+  taphold: true,
+  menu: [ {
+    title: "Size",
+    cmd: "paste",
+    disabled: true
+  }, {
+    title: "----"
+  }, {
+    title: "Color",
+    children: [{
+      title: "Default",
+       cmd: "Default"
+    }, {
+      title: "%Complete/ProjectStage",
+      cmd: "PerComplete"
+      
+    }, ]
+  }],
+  // Handle menu selection to implement a fake-clipboard
+  select: function(event, ui) {
+    var $target = ui.target;
+    switch (ui.cmd) {
+      case "copy":
+        CLIPBOARD = $target.text();
+        break
+      case "paste":
+        CLIPBOARD = "";
+        break
+    }
+    
+	$target.attr("cf", ui.cmd)
+		
+    // Optionally return false, to prevent closing the menu now
+  },
+  // Implement the beforeOpen callback to dynamically change the entries
+  beforeOpen: function(event, ui) {
+    var $menu = ui.menu,
+      $target = ui.target,
+      extraData = ui.extraData; // passed when menu was opened by call to open()
+
+   
+    ui.menu.zIndex($(event.target).zIndex() + 1);
+
+   
+    // Optionally return false, to prevent opening the menu now
+  }
+});
+
+</script>
+
+
+  </body>
+</html>
