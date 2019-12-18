@@ -1,5 +1,5 @@
-<script src="/D3/js/jquery.js"></script>
-<script src="/D3/js/d3.min.v4.js"></script>
+<script src="/js/jquery.js"></script>
+<script src="/js/d3.min.v4.js"></script>
 
 <style>
 text {
@@ -37,6 +37,18 @@ rect.parent,
 
 </style>
 
+<!--  Radar Chart CSS-->
+<style>
+   .radar-chart .area {
+      fill-opacity: 0.7;
+    }
+    .radar-chart.focus .area {
+      fill-opacity: 0.3;
+    }
+    .radar-chart.focus .area.focused {
+      fill-opacity: 0.9;
+    }
+</style>
 
 <style>
  .node {
@@ -93,17 +105,34 @@ color:white;
 .Level1Chart{
 position:relative;
 width:40%;
-height:50%;
+height:100%;
 display:inline-block;
-top:11px;
+float:left;
+
 }
 .sectionTitle{
 position:relative;
 text-align:center;
 width:100%;
-height:10%;
+height:25px;
 font-size: 22px;
-top: 29px;
+
+}
+
+.Chart_Area{
+position:relative;
+border: 1px solid black;
+    margin-left: 25px;
+    position: relative;
+    margin-top: 20px;
+    width: 93%;
+	    height: 525px;
+}
+
+.ChartTitle{
+position:relative;
+top:0px;
+
 }
 </style>
 <!--  Network Chart CSS-->
@@ -133,6 +162,8 @@ div.tooltip {
 
 <!--  Sunburst Chart CSS-->
 <style>
+
+
 .label_class
 {
  pointer-events: none; 
@@ -142,6 +173,8 @@ padding-bottom:2px ;
 text-align: center; vertical-align: middle;
 }
 </style>
+
+<div class='sectionTitle'> Translation of NCERT Heirarchy to Coobo World</div>
 <div class="Header" id="Header">
     <div class='divider'></div>
 	<div class="HeaderBlock">
@@ -169,17 +202,29 @@ text-align: center; vertical-align: middle;
 	</div>
 </div>
 
-<div class='sectionTitle'> Translation of NCERT Heirarchy to Coobo World</div>
-<div class='Chart_Level1_Area'>
-<div class= 'Chart Title'></div>
+
+<div class='Chart_Area'>
+
 <div style='left:40px' class='Level1Chart'>
+<div class= 'ChartTitle'> NCERT Heirarchy</div>
 <div id= 'SunburstChart'></div>
 </div>
-<div style='left:40px' class='Level1Chart'>
-<div class= 'Chart Title'></div>
+<div style='left:40px;width:50%' class='Level1Chart'>
+<div class= 'ChartTitle'> Connection of selected chapters to other NCERT Chapters by Coobo Grouping </div>
+<div id= 'PackCircle'></div>
+
+</div>
+
+
+</div>
+<div class='Chart_Area'>
 <div id= 'Treemap'></div>
 </div>
-<div id="NetworkChart"></div>
+<div class='Chart_Area'>
+	<div class='Level1Chart'> <div id="NetworkChart"></div> </div>
+	<div class='Level1Chart'> <div id="RadarChart"></div> </div>
+</div>
+
 </div>
 
 <script>
@@ -234,7 +279,7 @@ var nested =
 
 
 
-
+<!-- Sunburst Chart -->
 <script>
 let width = 460,
     height = 460,
@@ -429,6 +474,7 @@ function click(d) {
 
 </script>
 
+<!-- TreeMap Chart -->
 <script>
 function filterfornode(lookupid){
 
@@ -436,6 +482,7 @@ if(lookupid=="L0")
 {
 data_filter = []
 d3.select("#Treemap").selectAll("*").remove();
+d3.select("#PackCircle").selectAll("*").remove();
 }
 
 else{
@@ -445,6 +492,7 @@ data_filter = window.data_k.filter(function(d) { return  (filters[0].L1 == "" ||
  && ( filters[0].L2 == "" || filters[0].L2 == d.Subject ) && ( filters[0].L3 == "" || filters[0].L3 == d.Unit )
   && ( filters[0].L4 == "" || filters[0].L4 == d.Chapter )})
   
+
 var Name =""
 if(filters[0].L1 != ""){ Name = Name + "Grade:" + filters[0].L1 }
 if(filters[0].L2 != ""){ Name = Name + "  Subject:" + filters[0].L2 }
@@ -482,17 +530,31 @@ if(filters[0].L4 != ""){ Name = Name + "  Chapter:" + filters[0].L4 }
 		
 		
   Treemap(root) 
+  
+  var CoobosList = []
+  for(i =0; i< data_filter.length; i++)
+  {
+	if(CoobosList.indexOf(data_filter[i].CooboTitles)==-1 && data_filter[i].CooboTitles !="")
+	{
+	CoobosList.push(data_filter[i].CooboTitles)
+	}
+  }
+  
+  var data2 = window.data_k.filter(function(d) { return  (CoobosList.indexOf(d.CooboTitles)!=-1 )})
+  PackCircle(data2,Name)
+  
  }
   }
   
-  
+
+ 
 function Treemap(root){
 
 d3.select("#Treemap").selectAll("*").remove();
 
 
 var margin = {top: 24, right: 0, bottom: 0, left: 0},
-width = 800, //640
+width = 1200, //640
 height = 530,
 formatNumber = d3.format(",d"),
 transitioning;
@@ -739,6 +801,310 @@ function name(d) {
  
 </script>
 
+<!-- Pack Circle -->
+<script>
+function PackCircle(data, name_root){
+
+var nested = 
+	d3.nest()
+  .key(function(d) { return d.CooboTitles; })
+  .key(function(d) { return d.Grade; })
+  .key(function(d) { return d.Chapter; })
+  .rollup(function(v) {
+     return {
+	size: d3.sum(v, function(d) { return 1; }) 
+	}
+	
+  }).entries(data);
+  
+ 
+ 
+ 
+ var root = {"name":name_root, "children": []};
+		for(var i=0; i<nested.length; i++) {
+		result = {"name":nested[i].key,"children":[]}
+			for(var j=0; j<nested[i].values.length;j++)
+			{
+			
+			
+				for(var k=0; k<nested[i].values[j].values.length;k++)
+				{
+				result.children.push({"name":nested[i].values[j].values[k].key, "size":nested[i].values[j].values[k].value.size ,"color":nested[i].values[j].key });
+				
+				}
+				
+			}
+			root.children.push(result)
+			
+			
+		}
+
+
+
+   PackCircels(root) 
+
+}
+
+ 
+function PackCircels(root){
+
+d3.select("#PackCircle").selectAll("*").remove();
+
+
+
+var width = 700,height = 500;
+var zoom = d3.zoom()
+            .scaleExtent([1, 4])
+            .on("zoom", zoomed);
+
+var drag = d3.drag()
+            .subject(function (d) { return d; })
+            .on("start", dragstarted)
+            .on("drag", dragged)
+            .on("end", dragended);
+
+
+             
+
+var svg = d3.select("#PackCircle").append("svg") .attr('width', width)
+              .attr('height', height),
+    margin = 20,
+    diameter = +height,
+    g = svg.append("g").attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
+svg
+    .call(zoom); 
+
+	
+var div = d3.select("#PackCircle").append("div")	
+    .attr("class", "tooltip")				
+    .style("opacity", 0);
+	
+var color = d3.scaleLinear()
+    .domain([-1, 10])
+    .range(["hsl(152,80%,80%)", "hsl(228,30%,40%)"])
+    .interpolate(d3.interpolateHcl);
+
+var color2 = d3.scaleOrdinal(d3.schemeCategory20);
+var pack = d3.pack()
+    .size([diameter, diameter])
+    .padding(5);
+
+
+
+ Color_L1 = $('#Color_L1').val()
+ Color_L2 = $('#Color_L2').val()
+ Color_L3 = $('#Color_L3').val()
+ Color_L4 = $('#Color_L4').val()
+ Color_L5 = $('#Color_L5').val()
+ Color_L6 = $('#Color_L6').val()
+ 
+		
+  root = d3.hierarchy(root)
+      .sum(function(d) { return d.size; })
+      .sort(function(a, b) { return b.value - a.value; });
+
+  
+  var focus = root,
+      nodes = pack(root).descendants(),
+      view;
+
+  var tooltip = d3.select("#PackCircels")
+	.append("div")
+	.style("position", "absolute")
+	.style("z-index", "10")
+	.style("visibility", "hidden")
+	
+	
+	
+	
+function describeArc( radius ){
+
+   
+    var d = [
+        "M", -radius, 0, 
+        "A", 1,1,0,0,1,+radius, 0
+    ].join(" ");
+
+    return d;       
+}
+
+
+
+	
+function getcolorofnode(colorv,dep)
+{
+
+if(dep == 2)
+ {circlecolor = color2(colorv)}
+else{
+circlecolor = color(dep)
+}
+	 
+	  return(circlecolor)
+}	
+ 
+ var circle = g.selectAll("circle")
+    .data(nodes)
+    .enter().append("circle")
+      .attr("class", function(d) { return d.parent ? d.children ? "node" : "node node--leaf" : "node node--root"; })
+      .style("fill", function(d) {   return getcolorofnode(d.data.color, d.depth) })
+	    .style("stroke", "#666")
+	    .style("stroke-width", "1")
+	  .on("click", function(d) {  ; if (focus !== d) zoomfun(d), d3.event.stopPropagation(); })
+	   .on("mouseover", function(d) {
+	   var ttip = ""
+	    if(d.depth==2){ttip = "Grade:"+d.data.color + "<br> Unit:"+d.data.name}else{ttip= d.data.name}
+            div.transition()		
+                .duration(200)		
+                .style("opacity", .9);		
+            div	.html( ttip  )	
+                .style("left", (d3.event.pageX - 800) + "px")		
+                .style("top", (d3.event.pageY - 200) + "px");	
+            })					
+        .on("mouseout", function(d) {		
+            div.transition()		
+                .duration(500)		
+                .style("opacity", 0);	
+        })
+	.on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
+	;
+	
+	
+
+	var arcs = g.selectAll("path").data(nodes)
+    .enter().append("path")
+    .attr("fill","none")
+    .attr("id", function(d,i){return "packcircle"+i;})
+    .attr("d", function(d,i) {
+        return describeArc(  d.r )
+    } );
+	
+	
+	
+	
+var text = g.selectAll("text").data(nodes)
+    .enter().append("text")
+	.attr('class','pack_labels')
+	.attr("font-size",function(d){if(d.depth==0){return 16}if(d.depth==1){return 8}if(d.depth==2){return 4}})
+    .style("text-anchor","middle")
+    .append("textPath")
+    .attr("xlink:href",function(d,i){return "#packcircle"+i;})
+    .attr("startOffset",function(d,i){return "50%";})
+
+    .text(function(d){return d.data.name;})
+
+	
+
+
+
+ 
+  var node = g.selectAll("circle,text");
+
+  svg
+      .style("background", "white")
+      .on("click", function() { zoomfun(root); });
+
+  zoomTo([root.x, root.y, root.r * 2 + margin]);
+
+  
+ for(g=1;g <=12;g++)
+ {
+ svg.append("circle").attr("cx",520).attr("cy",130+g*20).attr("r", 6).style("fill", color2(g))
+ svg.append("text").attr("x", 530).attr("y", 130+g*20).text("Grade " + g).style("font-size", "15px").attr("alignment-baseline","middle")
+ }
+
+
+
+
+
+
+  function zoomfun(d) {
+    var focus0 = focus; focus = d;
+	
+	NetworkGraphdata(d.data.name, d.depth)
+    var transition = d3.transition()
+        .duration(d3.event.altKey ? 7500 : 750)
+        .tween("zoom", function(d) {
+          var i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2 + margin]);
+          return function(t) { zoomTo(i(t)); };
+        });
+
+
+  }
+
+  function zoomTo(v) {
+    var k = diameter / v[2]; view = v;
+	
+	
+    node.attr("transform", function(d) { return "translate(" + (d.x - v[0]) * k + "," + (d.y - v[1]) * k + ")"; });
+    circle.attr("r", function(d) { return d.r * k; });
+	svg.selectAll("path").attr('d', function(d){return describeArc(d.r * k)})
+	
+	text.attr("font-size",function(d){if(d.depth==0){return(16)} else{return(d3.min([ d.r*k/2 , 16]))}})
+
+	
+  }
+  
+  
+  function zoom(d) {
+  var focus0 = focus; focus = d;
+
+  var transition = d3.transition()
+      .duration(d3.event.altKey ? 7500 : 750)
+      .tween("zoom", function(d) {
+        var i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2 + margin]);
+        return function(t) { zoomTo(i(t)); };
+      });
+
+
+}
+
+
+   function zoomed() {
+    var k2 = d3.event.transform.k
+   g.style("stroke-width", 1.5 / d3.event.transform.k + "px");
+  g.attr("transform", d3.event.transform); // updated for d3 v4
+	  if( Math.round(d3.event.transform.k) == 1)
+	  {
+	  g.attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
+	  }
+
+     text.attr("font-size",function(d){return(d3.min([d.r*k2/1.5 , 16]))})
+   
+		   
+		   
+        }
+
+        function dragstarted(d) {
+            d3.event.sourceEvent.stopPropagation();
+            d3.select(this).classed("dragging", true);
+        }
+
+        function dragged(d) {
+            d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
+        }
+
+        function dragended(d) {
+            d3.select(this).classed("dragging", false);
+        }
+		 function slided(d) {
+            zoom.scaleTo(svg, d3.select(this).property("value"));
+        }
+
+		const cell = svg.append("g")
+      .attr("fill", "none")
+    .selectAll("g")
+    .data(root)
+    .enter().append("g");
+		
+		}
+function stopped() {
+  if (d3.event.defaultPrevented) d3.event.stopPropagation();
+}
+
+</script>
+
+<!-- Network Chart -->
 <script>
 function NetworkGraphdata(nodename, depth){
 
@@ -793,22 +1159,22 @@ data_filter = window.data_k.filter(function(d) { return  (d.Concept == nodename)
 		} 
 		
 		
-  NetworkChart(nodes,links) 
+  NetworkChart(nodes,links,"#NetworkChart",600,500) 
   
   RadarChart(CoobosList)
   
   }
 }
 
- function NetworkChart(nodes,links) 
+ function NetworkChart(nodes,links,id, height, width ) 
   {
   
-  var height = 450;
-d3.select("#NetworkChart").selectAll("*").remove();
 
-var svg = d3.select('#NetworkChart')
+d3.select(id).selectAll("*").remove();
+
+var svg = d3.select(id)
               .append('svg')
-              .attr('width', width+600)
+              .attr('width', width )
               .attr('height', height);
 			   
 	
@@ -975,16 +1341,23 @@ function tickActions() {
 
 }
 
+</script>
+
+<!-- Radar Chart -->
+<script>
 
 function RadarChart(CoobosList)
 {
 
-var data_filter = window.data_k.filter(function(d) { return  ( CoobosList.indexOf(d.CooboTitles) != -1)})
+
+
+var data_filter = window.data_k.filter(function(d) { return  ( CoobosList.indexOf(d.CooboTitles) != -1 && d.CooboTitles != "" )})
+
 
 Axis_Topic = []
-Axis_Topic_template = []
+
 	for(var i=0; i<data_filter.length; i++) {
-		if(Axis_Topic.indexOf(data_filter[i].Topic) ===  -1){Axis_Topic.push( data_filter[i].Topic); Axis_Topic_template.push({"axis": data_filter[i].Topic , "value":0}) }
+		if(Axis_Topic.indexOf(data_filter[i].Topic) ===  -1){Axis_Topic.push( data_filter[i].Topic);  }
 		
 	}
 	
@@ -997,8 +1370,136 @@ var result_temp =
 	size: d3.sum(v, function(d) { return 1; }) 
 	} }).entries(data_filter);
   
+DataSet = [] 
+
+
+for(i = 0; i<result_temp.length; i++)
+{
+if(result_temp[i].key != "")
+{
+	var rt = {"name":result_temp[i].key , "axes":[]} 
+	var axis_l = []
+	for(k = 0; k<result_temp[i].values.length;k++)
+	{
+	axis_l.push(result_temp[i].values[k].key)
+	rt.axes.push({"axis":result_temp[i].values[k].key, "value": result_temp[i].values[k].value.size})
+	}
 	
-console.log(Axis_Topic_template)
+	for(k=0;k<Axis_Topic.length;k++)
+	{
+	if(axis_l.indexOf(Axis_Topic[k])==-1)
+	{
+	rt.axes.push({"axis":Axis_Topic[k], "value": 0})
+	
+	}
+	}
+	
+	DataSet.push(rt)
+	
 }
+
+}
+
+
+PlotRadar(DataSet,Axis_Topic)
+
+
+}
+
+function PlotRadar(DataSet,Axis_Topic)
+{
+
+d3.select("#RadarChart").selectAll("*").remove();
+
+let svg = d3.select("#RadarChart").append("svg")
+    .attr("width", 600)
+    .attr("height", 480);
+
+let radialScale = d3.scaleLinear()
+    .domain([0,10])
+    .range([0,250]);
+let ticks = [2,4,6,8,10];
+
+
+ticks.forEach(t =>
+    svg.append("circle")
+    .attr("cx", 300)
+    .attr("cy", 300)
+    .attr("fill", "none")
+    .attr("stroke", "gray")
+    .attr("r", radialScale(t))
+);
+
+function angleToCoordinate(angle, value){
+    let x = Math.cos(angle) * radialScale(value);
+    let y = Math.sin(angle) * radialScale(value);
+    return {"x": 300 + x, "y": 300 - y};
+}
+
+
+
+
+for (var i = 0; i < Axis_Topic.length; i++) {
+    let ft_name = Axis_Topic[i];
+    let angle = (Math.PI / 2) + (2 * Math.PI * i / Axis_Topic.length);
+    let line_coordinate = angleToCoordinate(angle, 10);
+    let label_coordinate = angleToCoordinate(angle, 10.5);
+
+    //draw axis line
+    svg.append("line")
+    .attr("x1", 300)
+    .attr("y1", 300)
+    .attr("x2", line_coordinate.x)
+    .attr("y2", line_coordinate.y)
+    .attr("stroke","black");
+
+    //draw axis label
+    svg.append("text")
+    .attr("x", label_coordinate.x)
+    .attr("y", label_coordinate.y)
+    .text(ft_name);
+}
+
+
+let line = d3.line()
+    .x(d => d.x)
+    .y(d => d.y);
+
+var color2 = d3.scaleOrdinal(d3.schemeCategory20);
+
+function getPathCoordinates(data_point){
+    let coordinates = [];
+    for (var i = 0; i < Axis_Topic.length; i++){
+        let ft_name = Axis_Topic[i];
+        let angle = (Math.PI / 2) + (2 * Math.PI * i / Axis_Topic.length);
+		dp = data_point.filter(function(d) {return d.axis == ft_name; })
+		
+        coordinates.push(angleToCoordinate(angle, dp[0].value));
+    }
+    return coordinates;
+}
+
+
+for (var i = 0; i < DataSet.length; i ++){
+    let d = DataSet[i];
+    let cchart = color2(i);
+	
+	console.log(cchart)
+    let coordinates = getPathCoordinates(d.axes);
+  
+    //draw the path element
+    svg.append("path")
+    .datum(coordinates)
+    .attr("d",line)
+    .attr("stroke-width", 3)
+    .attr("stroke", cchart)
+    .attr("fill", cchart)
+    .attr("stroke-opacity", 1)
+    .attr("opacity", 0.5);
+}
+
+
+}
+
 
 </script>
