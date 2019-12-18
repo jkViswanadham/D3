@@ -1284,7 +1284,7 @@ circlecolor = color(dep)
 	  .on("click", function(d) {  ; if (focus !== d) zoomfun(d), d3.event.stopPropagation(); })
 	   .on("mouseover", function(d) {
 	   var ttip = ""
-	    if(d.depth==2){ttip = "Grade:"+d.data.color + "<br> Unit:"+d.data.name}else{ttip= d.data.name}
+	    if(d.depth==2){ttip = "Grade:"+d.data.color + "<br> Chapter:"+d.data.name}else{ttip= d.data.name}
             div.transition()		
                 .duration(200)		
                 .style("opacity", .9);		
